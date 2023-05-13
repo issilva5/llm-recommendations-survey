@@ -1,0 +1,78 @@
+.required {
+    color: red;
+    margin-left: 5px;
+    font-size: small;
+    vertical-align: super;
+}
+
+.question {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.questionEnunciation {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+/* .boolean-question-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+} */
+
+.booleanQuestionOptions {
+    display: flex;
+    flex-direction: column;
+}
+
+.booleanQuestionOptions label {
+    margin: 0 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.booleanQuestionOptions label:hover {
+    color: #007bff;
+}
+
+.booleanQuestionOptions input[type="radio"] {
+    /* Increase the font size of the label */
+    font-size: 24px;
+    /* Hide the default radio button circle */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* Set the size of the radio button */
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #aaa;
+    /* Center the radio button within the label */
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+    margin-right: 5px;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+.booleanQuestionOptions input[type="radio"]:checked::before {
+    /* Create a smaller circle inside the radio button when it's checked */
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #007bff;
+}

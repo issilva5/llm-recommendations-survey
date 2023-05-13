@@ -1,3 +1,4 @@
+import BooleanQuestion from "../BooleanQuestion";
 import LikertScaleQuestion from "../LikertQuestion";
 import TextQuestion from "../TextQuestion";
 
@@ -13,6 +14,13 @@ function Question({ questionNumber, questionModel, onAnswer }) {
         
         case "likert":
             return <LikertScaleQuestion
+                no={questionNumber}
+                onAnswer={onAnswer}
+                {...questionModel}
+            />
+        
+        case "boolean":
+            return <BooleanQuestion 
                 no={questionNumber}
                 onAnswer={onAnswer}
                 {...questionModel}

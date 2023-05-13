@@ -21,6 +21,11 @@ function App() {
         "Agree",
         "Strongly agree"
       ]
+    },
+    {
+      type: "boolean",
+      title: "Have you watched this movie previously?",
+      isRequired: true
     }
   ]
 
