@@ -1,25 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import Survey from "./components/Survey";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+  const questions = [
+    {
+      type: "text",
+      title: "What sort of movies do you like?",
+      isRequired: true,
+      maxLength: 300,
+      minLength: 150
+    }
+  ]
+
+  return <Survey questions={questions}/>;
+
 }
 
 export default App;
