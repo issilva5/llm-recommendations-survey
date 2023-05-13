@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Question from "../Question";
+import Question from "../survey_elements/questions/Question";
 import styles from "./style.module.css";
 
 function Survey(props) {
