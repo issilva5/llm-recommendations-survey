@@ -26,6 +26,12 @@ function App() {
       type: "boolean",
       title: "Have you watched this movie previously?",
       isRequired: true
+    },
+    {
+      type: "search-select",
+      title: "Name three of your favorite movies.",
+      isRequired: true,
+      maxSelection: 3
     }
   ]
 

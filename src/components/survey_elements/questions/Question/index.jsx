@@ -1,5 +1,6 @@
 import BooleanQuestion from "../BooleanQuestion";
 import LikertScaleQuestion from "../LikertQuestion";
+import SearchSelectQuestion from "../SearchSelectQuestion";
 import TextQuestion from "../TextQuestion";
 import styles from "./style.module.css";
 
@@ -8,7 +9,8 @@ function Question({ questionNumber, questionModel, onAnswer }) {
     const questionTypes = {
         "text": TextQuestion,
         "likert": LikertScaleQuestion,
-        "boolean": BooleanQuestion
+        "boolean": BooleanQuestion,
+        "search-select": SearchSelectQuestion
     };
     
     const QuestionType = questionTypes[questionModel.type];
