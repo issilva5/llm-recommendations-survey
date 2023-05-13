@@ -11,7 +11,6 @@ function BooleanQuestion(props) {
     };
 
     return (
-
         <div className={styles.booleanQuestionOptions}>
             <label>
                 <input
