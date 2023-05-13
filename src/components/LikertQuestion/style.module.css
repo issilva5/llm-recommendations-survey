@@ -1,0 +1,51 @@
+.required {
+    color: red;
+    margin-left: 5px;
+    font-size: small;
+    vertical-align: super;
+}
+
+.question {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.questionEnunciation {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.likertScaleContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+}
+
+.likertScaleOptions {
+    display: flex;
+    justify-content: center;
+}
+
+.likertScaleButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 50px;
+    margin: 0 10px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.likertScaleButton:hover {
+    background-color: #c0c0c0;
+}
+
+.likertScaleButton.selected {
+    background-color: #007bff;
+    color: #fff;
+}

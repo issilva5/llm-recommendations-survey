@@ -19,6 +19,7 @@ function TextQuestion(props) {
                     maxLength={props.maxLength}
                     onChange={(e) => {
                         setLength(e.target.value.length)
+                        props.onAnswer(props.no, e.target.value)
                     }}
                     className={styles.textQuestionInput}
                 />

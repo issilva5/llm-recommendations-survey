@@ -9,6 +9,18 @@ function App() {
       isRequired: true,
       maxLength: 300,
       minLength: 150
+    },
+    {
+      type: "likert",
+      title: "This explanation helps me to determine how well I will like this movie.",
+      isRequired: true,
+      options: [
+        "Strongly disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly agree"
+      ]
     }
   ]
 
