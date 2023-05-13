@@ -1,29 +1,3 @@
-.required {
-    color: red;
-    margin-left: 5px;
-    font-size: small;
-    vertical-align: super;
-}
-
-.question {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-}
-
-.questionEnunciation {
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 20px;
-}
-
-/* .boolean-question-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px;
-} */
-
 .booleanQuestionOptions {
     display: flex;
     flex-direction: column;

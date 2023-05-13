@@ -6,34 +6,26 @@ function TextQuestion(props) {
     const [length, setLength] = useState(0);
 
     return (
-        <div className={styles.question}>
-            <p className={styles.questionEnunciation}>
-                {props.no}. {props.title}
-                <span className={styles.required}>
-                    {props.isRequired ? '*' : ''}
-                </span>
-            </p>
-            <div className={styles.questionTextareaContainer}>
-                <textarea
-                    minLength={props.minLength}
-                    maxLength={props.maxLength}
-                    onChange={(e) => {
-                        setLength(e.target.value.length)
-                        props.onAnswer(props.no, e.target.value)
-                    }}
-                    className={styles.textQuestionInput}
-                />
-                {
-                    props.maxLength !== undefined ?
-                        <div className={styles.questionTextareaCounter}>
-                            <span>{length}</span>
-                            /
-                            <span>{props.maxLength}</span>
-                        </div>
+        <div className={styles.questionTextareaContainer}>
+            <textarea
+                minLength={props.minLength}
+                maxLength={props.maxLength}
+                onChange={(e) => {
+                    setLength(e.target.value.length)
+                    props.onAnswer(e.target.value)
+                }}
+                className={styles.textQuestionInput}
+            />
+            {
+                props.maxLength !== undefined ?
+                    <div className={styles.questionTextareaCounter}>
+                        <span>{length}</span>
+                        /
+                        <span>{props.maxLength}</span>
+                    </div>
                     :
-                        <></>
-                }
-            </div>
+                    <></>
+            }
         </div>
     );
 

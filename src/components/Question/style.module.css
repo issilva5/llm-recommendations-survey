@@ -1,0 +1,18 @@
+.required {
+    color: red;
+    margin-left: 5px;
+    font-size: small;
+    vertical-align: super;
+}
+
+.question {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.questionEnunciation {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 20px;
+}

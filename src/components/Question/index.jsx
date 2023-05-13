@@ -1,34 +1,32 @@
 import BooleanQuestion from "../BooleanQuestion";
 import LikertScaleQuestion from "../LikertQuestion";
 import TextQuestion from "../TextQuestion";
+import styles from "./style.module.css";
 
 function Question({ questionNumber, questionModel, onAnswer }) {
 
-    switch (questionModel.type) {
-        case "text":
-            return <TextQuestion
-                no={questionNumber}
-                onAnswer={onAnswer}
-                {...questionModel}
-            />
-        
-        case "likert":
-            return <LikertScaleQuestion
-                no={questionNumber}
-                onAnswer={onAnswer}
-                {...questionModel}
-            />
-        
-        case "boolean":
-            return <BooleanQuestion 
-                no={questionNumber}
-                onAnswer={onAnswer}
-                {...questionModel}
-            />
+    const questionTypes = {
+        "text": TextQuestion,
+        "likert": LikertScaleQuestion,
+        "boolean": BooleanQuestion
+    };
+    
+    const QuestionType = questionTypes[questionModel.type];
 
-        default:
-            break;
-    }
+    return (
+        <div className={styles.question}>
+            <p className={styles.questionEnunciation}>
+                {questionNumber}. {questionModel.title}
+                <span className={styles.required}>
+                    {questionModel.isRequired ? '*' : ''}
+                </span>
+            </p>
+            <QuestionType 
+                onAnswer={(answer) => onAnswer(questionNumber, answer)}
+                {...questionModel}
+            />
+        </div>
+    )
 
 }
 
