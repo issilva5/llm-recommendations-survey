@@ -24,3 +24,7 @@ yarn-error.log*
 
 App_old.js
 survey_model.js
+
+*llmrec*
+*.env*
+*pycache*
