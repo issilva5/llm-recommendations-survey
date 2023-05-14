@@ -7,6 +7,13 @@ function Survey(props) {
 
     const [answers, setAnswers] = useState({});
     const [currentPage, setCurrentPage] = useState(0);
+    const [recommendations, setRecommendations] = useState([
+        {
+            title: "Harry Potter and the Deathly Hallows: Part 1",
+            poster: "https://m.media-amazon.com/images/M/MV5BMGVmMWNiMDktYjQ0Mi00MWIxLTk0N2UtN2ZlYTdkN2IzNDNlXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_SX300.jpg",
+            explanation: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec."
+        }
+    ])
 
     const onAnswer = (pageNumber, answer) => {
 
@@ -39,6 +46,7 @@ function Survey(props) {
                                 return <Page
                                     key={i}
                                     {...page}
+                                    item={page.itemID < recommendations.length ? recommendations[page.itemID] : page.item}
                                     pageNumber={i}
                                     onAnswer={onAnswer}
                                     answers={answers[i]}
@@ -49,12 +57,12 @@ function Survey(props) {
                     </div>
                     <div className={styles.buttons}>
                         {
-                            currentPage > 0 ?
+                            !props.pages[currentPage].nowayback && (currentPage > 0 ?
                                 <button
                                     className={styles.previousButton}
                                     onClick={setPreviousPage}
                                 >Previous</button> :
-                                <></>
+                                <></>)
                         }
                         {
                             currentPage + 1 < props.pages.length ?
@@ -62,6 +70,14 @@ function Survey(props) {
                                     className={styles.nextButton}
                                     onClick={setNextPage}
                                 >Next</button> :
+                                <></>
+                        }
+                        {
+                            currentPage + 1 === props.pages.length ?
+                                <button
+                                    className={styles.nextButton}
+                                // onClick={}
+                                >Finish</button> :
                                 <></>
                         }
                     </div>
