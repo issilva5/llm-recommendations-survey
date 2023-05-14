@@ -1,4 +1,5 @@
 import PageHeader from "../../textual/PageHeader";
+import InfoPage from "../InfoPage";
 import QuestionPage from "../QuestionPage";
 import RecPage from "../RecPage";
 
@@ -6,7 +7,8 @@ function Page(props) {
 
     const pageTypes = {
         "question": QuestionPage,
-        "recommendation": RecPage
+        "recommendation": RecPage,
+        "text": InfoPage
     };
 
     const PageType = pageTypes[props.type];
