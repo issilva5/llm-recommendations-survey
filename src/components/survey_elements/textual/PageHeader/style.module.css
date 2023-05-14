@@ -1,0 +1,19 @@
+.pageHeaderBox {
+    border: 1px solid #ccc;
+    background-color: #F1F1F1;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.pageHeaderTitle {
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.pageHeaderDescription {
+    font-size: 16px;
+    margin-top: 0;
+    margin-bottom: 0;
+}

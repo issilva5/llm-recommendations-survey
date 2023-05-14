@@ -1,3 +1,4 @@
+import PageHeader from "../../textual/PageHeader";
 import QuestionPage from "../QuestionPage";
 
 function Page(props) {
@@ -10,7 +11,10 @@ function Page(props) {
 
     return (
         <>
-            {props.visible ? <PageType {...props} /> : <></>}
+            {props.visible ? <>
+                {(props.title || props.description) && <PageHeader title={props.title} description={props.description} />}
+                <PageType {...props} />
+            </> : <></>}
         </>
     )
 

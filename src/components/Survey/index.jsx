@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./style.module.css";
 import Page from "../survey_elements/pages/Page";
+import Title from "../survey_elements/textual/Title";
 
 function Survey(props) {
 
@@ -27,39 +28,47 @@ function Survey(props) {
     }
 
     return (
-        <div className={styles.container}>
-            <div className={styles.survey}>
-                {
-                    props.pages.map((page, i) => {
-                        return <Page
-                            key={i}
-                            {...page}
-                            pageNumber={i}
-                            onAnswer={onAnswer}
-                            answers={answers[i]}
-                            visible={i === currentPage}
-                        />
-                    })
-                }
-                {
-                    currentPage > 0 ?
-                        <button
-                            className={styles.previousButton}
-                            onClick={setPreviousPage}
-                        >Previous</button> :
-                        <></>
-                }
-                {
-                    currentPage + 1 < props.pages.length ?
-                        <button
-                            className={styles.nextButton}
-                            onClick={setNextPage}
-                        >Next</button> :
-                        <></>
-                }
-            </div>
+        <>
 
-        </div>
+            <div className={styles.container}>
+                <Title title={props.title} />
+                <div >
+                    <div>
+                        {
+                            props.pages.map((page, i) => {
+                                return <Page
+                                    key={i}
+                                    {...page}
+                                    pageNumber={i}
+                                    onAnswer={onAnswer}
+                                    answers={answers[i]}
+                                    visible={i === currentPage}
+                                />
+                            })
+                        }
+                    </div>
+                    <div className={styles.buttons}>
+                        {
+                            currentPage > 0 ?
+                                <button
+                                    className={styles.previousButton}
+                                    onClick={setPreviousPage}
+                                >Previous</button> :
+                                <></>
+                        }
+                        {
+                            currentPage + 1 < props.pages.length ?
+                                <button
+                                    className={styles.nextButton}
+                                    onClick={setNextPage}
+                                >Next</button> :
+                                <></>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </>
     );
 
 }

@@ -3,7 +3,7 @@
    margin-right: 150px;
 }
 
-.survey {
+.buttons {
    position: relative;
 }
 
@@ -22,8 +22,8 @@
 }
 
 .nextButton {
-   position: absolute;
-   bottom: 10px;
+   position: absolute; 
+   bottom: 5px;
    right: 10px;
    /* add some styles to the button */
    padding: 10px 20px;

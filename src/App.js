@@ -32,17 +32,6 @@ function App() {
       title: "Name three of your favorite movies.",
       isRequired: true,
       maxSelection: 3
-    },
-    {
-      type: "boolean",
-      title: "Have you watched this movie previously?",
-      isRequired: true
-    },
-    {
-      type: "search-select",
-      title: "Name three of your favorite movies.",
-      isRequired: true,
-      maxSelection: 3
     }
   ]
 
@@ -77,19 +66,23 @@ function App() {
   const pages = [
     {
       type: "question",
+      title:"Part I - User Preferences",
+      description:"In this section, we are interested in understanding a little more about your movies preferences.",
       questions: questions
     },
     {
       type: "question",
+      title:"Part I - User Preferences",
       questions: questions2
     },
     {
       type: "question",
+      description:"In this section, we are interested in understanding a little more about your movies preferences.",
       questions: questions3
     }
   ]
 
-  return <Survey pages={pages}/>;
+  return <Survey title="LLM-Based Recommender System" pages={pages}/>;
 
 }
 
