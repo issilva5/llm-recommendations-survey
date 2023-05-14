@@ -76,7 +76,7 @@ function Survey(props) {
                             currentPage + 1 === props.pages.length ?
                                 <button
                                     className={styles.nextButton}
-                                // onClick={}
+                                onClick={() => console.log(answers)}
                                 >Finish</button> :
                                 <></>
                         }
