@@ -4,12 +4,11 @@ import styles from "./style.module.css";
 const SearchSelectQuestion = (props) => {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
-    const [selected, setSelected] = useState([]);
+    const [selected, setSelected] = useState(props.answer || []);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [message, setMessage] = useState("Please type a search query!");
 
     const handleInputChange = (event) => {
-        console.log(event.target.value)
         setQuery(event.target.value);
     };
 

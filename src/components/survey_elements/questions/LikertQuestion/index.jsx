@@ -3,11 +3,11 @@ import styles from "./style.module.css";
 
 function LikertScaleQuestion(props) {
 
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedOption, setSelectedOption] = useState(props.answer-1);
 
     const handleOptionClick = (option) => {
-        props.onAnswer(option + 1);
         setSelectedOption(option);
+        props.onAnswer(option + 1);
     };
 
     return (

@@ -32,10 +32,64 @@ function App() {
       title: "Name three of your favorite movies.",
       isRequired: true,
       maxSelection: 3
+    },
+    {
+      type: "boolean",
+      title: "Have you watched this movie previously?",
+      isRequired: true
+    },
+    {
+      type: "search-select",
+      title: "Name three of your favorite movies.",
+      isRequired: true,
+      maxSelection: 3
     }
   ]
 
-  return <Survey questions={questions}/>;
+  const questions2 = [
+    {
+      type: "boolean",
+      title: "Have you watched this movie previously?",
+      isRequired: true
+    },
+    {
+      type: "search-select",
+      title: "Name three of your favorite movies.",
+      isRequired: true,
+      maxSelection: 3
+    }
+  ]
+
+  const questions3 = [
+    {
+      type: "boolean",
+      title: "Have you watched this movie previously?",
+      isRequired: true
+    },
+    {
+      type: "search-select",
+      title: "Name three of your favorite movies.",
+      isRequired: true,
+      maxSelection: 3
+    }
+  ]
+
+  const pages = [
+    {
+      type: "question",
+      questions: questions
+    },
+    {
+      type: "question",
+      questions: questions2
+    },
+    {
+      type: "question",
+      questions: questions3
+    }
+  ]
+
+  return <Survey pages={pages}/>;
 
 }
 

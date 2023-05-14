@@ -4,7 +4,7 @@ import SearchSelectQuestion from "../SearchSelectQuestion";
 import TextQuestion from "../TextQuestion";
 import styles from "./style.module.css";
 
-function Question({ questionNumber, questionModel, onAnswer }) {
+function Question({ questionNumber, questionModel, onAnswer, answer }) {
 
     const questionTypes = {
         "text": TextQuestion,
@@ -25,6 +25,7 @@ function Question({ questionNumber, questionModel, onAnswer }) {
             </p>
             <QuestionType 
                 onAnswer={(answer) => onAnswer(questionNumber, answer)}
+                answer={answer}
                 {...questionModel}
             />
         </div>

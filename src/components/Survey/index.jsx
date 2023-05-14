@@ -1,38 +1,64 @@
 import { useState } from "react";
-import Question from "../survey_elements/questions/Question";
 import styles from "./style.module.css";
+import Page from "../survey_elements/pages/Page";
 
 function Survey(props) {
 
     const [answers, setAnswers] = useState({});
+    const [currentPage, setCurrentPage] = useState(0);
 
-    const onAnswer = (number, answer) => {
-
-        console.log(answers)
+    const onAnswer = (pageNumber, answer) => {
 
         setAnswers(
             {
                 ...answers,
-                [number]: answer
+                [pageNumber]: answer
             }
         )
 
+    }
+
+    const setPreviousPage = () => {
+        setCurrentPage(currentPage => currentPage - 1)
+    }
+
+    const setNextPage = () => {
+        setCurrentPage(currentPage => currentPage + 1)
     }
 
     return (
         <div className={styles.container}>
             <div className={styles.survey}>
                 {
-                    props.questions.map((question, i) => {
-                        return <Question
+                    props.pages.map((page, i) => {
+                        return <Page
                             key={i}
-                            questionNumber={i + 1}
-                            questionModel={question}
+                            {...page}
+                            pageNumber={i}
                             onAnswer={onAnswer}
+                            answers={answers[i]}
+                            visible={i === currentPage}
                         />
                     })
                 }
+                {
+                    currentPage > 0 ?
+                        <button
+                            className={styles.previousButton}
+                            onClick={setPreviousPage}
+                        >Previous</button> :
+                        <></>
+                }
+                {
+                    currentPage + 1 < props.pages.length ?
+                        <button
+                            className={styles.nextButton}
+                            onClick={setNextPage}
+                        >Next</button> :
+                        <></>
+                }
             </div>
+
         </div>
     );
 

@@ -3,7 +3,7 @@ import styles from "./style.module.css";
 
 function BooleanQuestion(props) {
 
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedOption, setSelectedOption] = useState(props.answer);
 
     const handleOptionChange = (option) => {
         props.onAnswer(option);
