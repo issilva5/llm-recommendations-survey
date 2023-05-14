@@ -22,9 +22,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-App_old.js
-survey_model.js
-
 *llmrec*
 *.env*
 *pycache*

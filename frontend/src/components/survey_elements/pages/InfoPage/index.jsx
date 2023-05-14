@@ -5,8 +5,8 @@ function InfoPage({ text }) {
     return (
         <div>
             {
-                text.split("\n").map((t) => {
-                    return <p className={styles.text}>{t}</p>
+                text.split("\n").map((t, i) => {
+                    return <p key={i} className={styles.text}>{t}</p>
                 })
             }
         </div>
