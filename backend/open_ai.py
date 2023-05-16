@@ -3,6 +3,7 @@ import os
 import json
 import requests
 import random
+from openai.error import RateLimitError
 import time
 from dotenv import load_dotenv
 
@@ -29,10 +30,13 @@ def ask_recommendations(preferences):
     """
 
     prompt = basePrompt + """Could you recommend they four movies? Two of these movies should be a recommendation of a movie they must watch and two of movies they should avoid watching.
-    Write the answer in the format of a JSON file with the attribute recommendations that is an array with four objects with the attributes: title, imdbID and shouldWatch.
-    The title attribute must be the title of the recommended movie and the shouldWatch must be a boolean indicating if it the movie is a recommendation of a movie the user should or not watch. 
-    Do not recommend movies given in the user preferences answers.
-    Do not enumerate the movies. Don't put any additional text besides the JSON.
+    
+    Additional instructions:
+     1. Write the answer in the format of a JSON file with the attribute recommendations that is an array with four objects with the attributes: title, imdbID and shouldWatch.
+     2. The title attribute must be the title of the recommended movie and the shouldWatch must be a boolean indicating if it the movie is a recommendation of a movie the user should or not watch. 
+     3. Do not recommend movies given in the user preferences answers.
+     4. Do not enumerate the movies.
+     5. Don't put any additional text besides the JSON.
     """
 
     messages = [
@@ -73,26 +77,41 @@ def ask_recommendations(preferences):
 
 def get_explanation(movie, shouldWatch, userBased, userBasedBasePrompt):
 
-    time.sleep(30)
+    
     print(movie)
 
     prompt = f"""Why should {"someone with these preferences" if userBased else "someone"} {"not" if not shouldWatch else ""} watch the movie: {movie}?.
-    Write the answer as a plain text with at least 300 and at most 500 characters and without any additional text besides the answer.
-    Write the answer explanation as if you was talking to someone, for example: 'You should do this and that'.
+    
+    Additional instructions:
+     1. Write the answer as a plain text with at least 300 and at most 500 characters and without any additional text besides the answer.
+     2. Write the explanation as if you was talking to someone, for example: 'You may like this and that'.
+     {"3. Don't use 'Based on the answers provided' on the explanation." if userBased else ""}
     """
 
     if userBased:
-        prompt = userBasedBasePrompt + prompt + "Don't use 'Based on the answers provided' on the explanation."
+        prompt = userBasedBasePrompt + prompt
 
     messages = [
+        {
+            "role": "system", 
+            "content": "You are a helpful assistant that recommends movies to a user based on his previous watched movies."
+        },
         {
             "role": "user",
             "content": prompt
         }
     ]
 
-    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages,
-                                temperature=0, top_p=1, frequency_penalty=0,
-                                presence_penalty=0, n = 1)
+    done = False
+    while not done:
+        try:
+
+            response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages,
+                                        temperature=0, top_p=1, frequency_penalty=0,
+                                        presence_penalty=0, n = 1)
+            done = True
+        
+        except RateLimitError:
+            time.sleep(60)
     
     return response["choices"][0]["message"]["content"]
