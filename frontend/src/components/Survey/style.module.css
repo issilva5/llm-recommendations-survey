@@ -4,7 +4,9 @@
 }
 
 .buttons {
-   position: relative;
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
 }
 
 ::-webkit-scrollbar {
@@ -21,10 +23,20 @@
    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
 }
 
+.leftButtons {
+   justify-content: flex-start;
+}
+
+.rightButtons {
+   justify-content: flex-end;
+}
+
 .nextButton {
-   position: absolute;
-   bottom: 5px;
-   right: 10px;
+   /* position: absolute; */
+   margin-bottom: 10px;
+   float: right;
+   /* left: 865px; */
+   /* right: 10px; */
    /* add some styles to the button */
    padding: 10px 20px;
    background-color: #007bff;
@@ -40,9 +52,9 @@
 }
 
 .previousButton {
-   position: absolute;
-   bottom: 10px;
-   left: 10px;
+   /* position: absolute; */
+   margin-bottom: 10px;
+   /* left: 10px; */
    /* add some styles to the button */
    padding: 10px 20px;
    background-color: #007bff;

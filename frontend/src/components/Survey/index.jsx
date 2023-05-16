@@ -79,24 +79,24 @@ function Survey(props) {
 
             <div className={styles.container}>
                 <Title title={props.title} />
-                <div >
-                    <div>
-                        {
-                            props.pages.map((page, i) => {
-                                return <Page
-                                    key={i}
-                                    {...page}
-                                    item={page.itemID < recommendations.length ? recommendations[page.itemID] : page.item}
-                                    pageNumber={i}
-                                    invalidMessages={invalidPages[currentPage]}
-                                    onAnswer={onAnswer}
-                                    answers={answers[props.pages[i].name]}
-                                    visible={!loadingMessage && i === currentPage}
-                                />
-                            })
-                        }
-                    </div>
-                    <div className={styles.buttons}>
+                <div>
+                    {
+                        props.pages.map((page, i) => {
+                            return <Page
+                                key={i}
+                                {...page}
+                                item={page.itemID < recommendations.length ? recommendations[page.itemID] : page.item}
+                                pageNumber={i}
+                                invalidMessages={invalidPages[currentPage]}
+                                onAnswer={onAnswer}
+                                answers={answers[props.pages[i].name]}
+                                visible={!loadingMessage && i === currentPage}
+                            />
+                        })
+                    }
+                </div>
+                <div className={styles.buttons}>
+                    <div className={styles.leftButtons}>
                         {
                             !props.pages[currentPage].nowayback && (currentPage > 0 ?
                                 <button
@@ -105,6 +105,8 @@ function Survey(props) {
                                 >Previous</button> :
                                 <></>)
                         }
+                    </div>
+                    <div className={styles.rightButtons}>
                         {
                             currentPage + 1 < props.pages.length - (props.hasThanks ? 1 : 0) ?
                                 <button
@@ -123,8 +125,8 @@ function Survey(props) {
                                 <></>
                         }
                     </div>
-
                 </div>
+
             </div>
         </>
     );
