@@ -52,26 +52,28 @@ const questionsEvaluation = [
       type: "text",
       title: "What sort of movies do you like?",
       isRequired: true,
-      maxLength: 300,
+      maxLength: 500,
       minLength: 150
     },
     {
       type: "search-select",
       title: "Name three of your favorite movies.",
       isRequired: true,
+      minSelection: 3,
       maxSelection: 3
     },
     {
       type: "text",
       title: "What sort of movies do you dislike?",
       isRequired: true,
-      maxLength: 300,
+      maxLength: 500,
       minLength: 150
     },
     {
       type: "search-select",
       title: "Name three movies that you really disliked (or hated).",
       isRequired: true,
+      minSelection: 3,
       maxSelection: 3
     }
   ]

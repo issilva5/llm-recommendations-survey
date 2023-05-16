@@ -4,12 +4,19 @@ import styles from "./style.module.css";
 function TextQuestion(props) {
 
     const [text, setText] = useState(props.answer);
-    const [length, setLength] = useState(0);
+    const [length, setLength] = useState(props.answer ? props.answer.length : 0);
 
     const onChangeText = (e) => {
-        setLength(e.target.value.length)
+
+        const responseLength = e.target.value.length;
+        let invalidMessage = "";
+
+        if (responseLength < props.minLength)
+            invalidMessage = `This question requires a response of at least ${props.minLength} characters.`
+
+        setLength(responseLength)
         setText(e.target.value)
-        props.onAnswer(e.target.value)
+        props.onAnswer(e.target.value, invalidMessage)
     }
 
     return (

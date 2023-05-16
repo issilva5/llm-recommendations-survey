@@ -4,7 +4,7 @@ import styles from "./style.module.css";
 const SearchSelectQuestion = (props) => {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
-    const [selected, setSelected] = useState(props.answer || []);
+    const [selected, setSelected] = useState(props.answer || new Set());
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [message, setMessage] = useState("Please type a search query!");
 
@@ -37,15 +37,35 @@ const SearchSelectQuestion = (props) => {
     };
 
     const handleSelect = (item) => {
-        if (selected.length < props.maxSelection) {
-            setSelected([...selected, item]);
-            props.onAnswer([...selected, item]);
+        if (selected.size < props.maxSelection) {
+
+            const newSelection = selected.add(item);
+
+            setSelected(newSelection);
+
+            let invalidMessage = "";
+
+            if (newSelection.size < props.minSelection)
+                invalidMessage = `This question requires at least ${props.minSelection} items, please select ${props.minSelection - newSelection.size} more.`
+
+            props.onAnswer(newSelection, invalidMessage);
         }
         setIsDropdownOpen(false)
     };
 
     const handleRemove = (item) => {
-        setSelected(selected.filter((x) => x !== item));
+
+        const newSelection = new Set([...selected].filter(x => x !== item));
+
+        setSelected(newSelection);
+
+        let invalidMessage = "";
+
+        if (newSelection.size < props.minSelection)
+            invalidMessage = `This question requires at least ${props.minSelection} items, please select ${props.minSelection - newSelection.size} more.`
+
+        props.onAnswer(newSelection, invalidMessage);
+
     };
 
     return (
@@ -86,7 +106,7 @@ const SearchSelectQuestion = (props) => {
                 </div>
             </div>
             <div className={styles.searchSelected}>
-                {selected.map((item) => (
+                {[...selected].map((item) => (
                     <div key={item.imdbID} className={styles.searchSelectedItem}>
                         <img src={item.Poster} alt={item.Title} />
                         <p>{item.Title} &#40;{item.Year}&#41;</p>

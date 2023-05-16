@@ -8,9 +8,10 @@ function Survey(props) {
     const [answers, setAnswers] = useState({});
     const [currentPage, setCurrentPage] = useState(0);
     const [loadingMessage, setLoadingMessage] = useState(undefined);
-    const [recommendations, setRecommendations] = useState([])
+    const [recommendations, setRecommendations] = useState([]);
+    const [invalidPages, setInvalidPages] = useState({});
 
-    const onAnswer = (pageNumber, answer) => {
+    const onAnswer = (pageNumber, answer, invalidMessages) => {
 
         setAnswers(
             {
@@ -18,6 +19,13 @@ function Survey(props) {
                 [props.pages[pageNumber].name]: answer
             }
         )
+
+        const newValid = {
+            ...invalidPages,
+            [pageNumber]: invalidMessages
+        }
+
+        setInvalidPages(newValid);
 
     }
 
@@ -80,6 +88,7 @@ function Survey(props) {
                                     {...page}
                                     item={page.itemID < recommendations.length ? recommendations[page.itemID] : page.item}
                                     pageNumber={i}
+                                    invalidMessages={invalidPages[currentPage]}
                                     onAnswer={onAnswer}
                                     answers={answers[props.pages[i].name]}
                                     visible={!loadingMessage && i === currentPage}
@@ -101,6 +110,7 @@ function Survey(props) {
                                 <button
                                     className={styles.nextButton}
                                     onClick={setNextPage}
+                                    disabled={invalidPages[currentPage] && Object.keys(invalidPages[currentPage]).reduce((acc, curr) => acc + invalidPages[currentPage][curr], '') !== ""}
                                 >Next</button> :
                                 <></>
                         }
