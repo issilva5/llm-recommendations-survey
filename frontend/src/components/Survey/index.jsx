@@ -94,6 +94,9 @@ function Survey(props) {
                             />
                         })
                     }
+                    {
+                        loadingMessage && <p>{loadingMessage}</p>
+                    }
                 </div>
                 <div className={styles.buttons}>
                     <div className={styles.leftButtons}>
@@ -108,7 +111,7 @@ function Survey(props) {
                     </div>
                     <div className={styles.rightButtons}>
                         {
-                            currentPage + 1 < props.pages.length - (props.hasThanks ? 1 : 0) ?
+                            !loadingMessage && (currentPage + 1 < props.pages.length - (props.hasThanks ? 1 : 0)) ?
                                 <button
                                     className={styles.nextButton}
                                     onClick={setNextPage}
