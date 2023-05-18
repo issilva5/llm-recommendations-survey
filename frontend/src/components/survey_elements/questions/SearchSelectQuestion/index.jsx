@@ -6,26 +6,34 @@ const SearchSelectQuestion = (props) => {
     const [results, setResults] = useState([]);
     const [selected, setSelected] = useState(props.answer || new Set());
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [message, setMessage] = useState("Please type a search query!");
+    const [message, setMessage] = useState(selected.size < props.maxSelection ? "Please type a search query of at least 3 characters!" : "You've selected the maximum number of options possible.");
 
     const handleInputChange = (event) => {
-        setQuery(event.target.value);
-    };
 
-    const handleSearchClick = async () => {
+        const newQuery = event.target.value;
 
-        if (query.length === 0) {
+        setQuery(newQuery);
+
+        if (newQuery.length < 3) {
             setResults([]);
-            setMessage("Please type a search query!");
+            setMessage("Please type a search query of at least 3 characters!");
             return
         }
 
-        fetch(`http://omdbapi.com/?s=${query}&apikey=ea2e4238&t=movie`)
+        setResults([]);
+        setMessage("Searching...")
+        fetch(`http://omdbapi.com/?s=${newQuery.trim()}&apikey=ea2e4238&t=movie`)
             .then(response => response.json())
             .then(data => {
-
+                
                 if (data.Response === "True") {
-                    setResults(data.Search)
+
+                    let queryResult = data.Search.filter((e) => { return e.Poster !== "N/A" });
+                    if (queryResult.length === 0) {
+                        setResults([])
+                        setMessage("Movie not found!")
+                    } else setResults(queryResult)
+
                 } else {
                     setMessage(data.Error)
                     setResults([])
@@ -34,6 +42,7 @@ const SearchSelectQuestion = (props) => {
                 setIsDropdownOpen(true)
 
             });
+
     };
 
     const handleSelect = (item) => {
@@ -42,6 +51,12 @@ const SearchSelectQuestion = (props) => {
             const newSelection = selected.add(item);
 
             setSelected(newSelection);
+            setQuery("");
+            setResults([]);
+
+            if (newSelection.size < props.maxSelection)
+                setMessage("Please type a search query of at least 3 characters!");
+            else setMessage("You've selected the maximum number of options possible.");
 
             let invalidMessage = "";
 
@@ -77,11 +92,10 @@ const SearchSelectQuestion = (props) => {
                 {isDropdownOpen && results.length > 0 && (
                     <div className={styles.searchResults}>
                         {results.map((item, i) => (
-                            item.Poster !== "N/A" ?
-                                <div key={i} className={styles.searchResult} onClick={() => handleSelect(item)}>
-                                    <img src={item.Poster} alt={item.Title} />
-                                    <p>{item.Title} &#40;{item.Year}&#41;</p>
-                                </div> : <></>
+                            <div key={i} className={styles.searchResult} onClick={() => handleSelect(item)}>
+                                <img src={item.Poster} alt={item.Title} />
+                                <p>{item.Title} &#40;{item.Year}&#41;</p>
+                            </div>
                         ))}
                     </div>
                 )}
@@ -98,11 +112,8 @@ const SearchSelectQuestion = (props) => {
                         placeholder="Search"
                         value={query}
                         onChange={handleInputChange}
-                        onKeyDown={(e) => e.key === 'Enter' ? handleSearchClick() : {}}
+                        disabled={selected.size === props.maxSelection}
                     />
-                    <button onClick={handleSearchClick} disabled={query.length === 0}>
-                        <i className="fa fa-search" />
-                    </button>
                 </div>
             </div>
             <div className={styles.searchSelected}>
