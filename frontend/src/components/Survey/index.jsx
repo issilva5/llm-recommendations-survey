@@ -40,7 +40,7 @@ function Survey(props) {
         if (props.pages[currentPage].onNextPage) {
             const action = props.pages[currentPage].onNextPage;
             setLoadingMessage(action[2])
-            fetch(`http://localhost:5000/${action[1]}`, {
+            fetch(`http://${process.env.BACKEND_URL}/${action[1]}`, {
                 method: action[0],
                 headers: {
                     'Accept': 'application/json',
@@ -61,7 +61,7 @@ function Survey(props) {
 
         const action = props.onFinish;
 
-        fetch(`http://localhost:5000/${action[1]}`, {
+        fetch(`http://${process.env.BACKEND_URL}/${action[1]}`, {
             method: action[0],
             headers: {
                 'Accept': 'application/json',
