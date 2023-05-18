@@ -15,17 +15,11 @@ omdb_api_key = os.getenv("OMDB_API_KEY")
 def ask_recommendations(preferences):
 
     basePrompt = f"""Given the answers for the following questions about the movie preferences of a person.
-    Question 1: What sort of movies do you like?
-    Answer 1: {preferences['1']}
+    Question 1: Name three of your favorite movies (separeted by semicolon).
+    Answer 1: {"; ".join([movie['Title'] for movie in preferences['1']])}
 
     Question 2: Name three of your favorite movies (separeted by semicolon).
     Answer 2: {"; ".join([movie['Title'] for movie in preferences['2']])}
-
-    Question 3: What sort of movies do you dislike?
-    Answer 3: {preferences['3']}
-
-    Question 4: Name three of your favorite movies (separeted by semicolon).
-    Answer 4: {"; ".join([movie['Title'] for movie in preferences['4']])}
 
     """
 
