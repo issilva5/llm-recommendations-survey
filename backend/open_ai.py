@@ -18,7 +18,7 @@ def ask_recommendations(preferences):
     Question 1: Name three of your favorite movies (separeted by semicolon).
     Answer 1: {"; ".join([movie['Title'] for movie in preferences['1']])}
 
-    Question 2: Name three of your favorite movies (separeted by semicolon).
+    Question 2: Name three movies that you really disliked (or hated).
     Answer 2: {"; ".join([movie['Title'] for movie in preferences['2']])}
 
     """

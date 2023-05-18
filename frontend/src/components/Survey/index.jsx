@@ -39,8 +39,9 @@ function Survey(props) {
 
         if (props.pages[currentPage].onNextPage) {
             const action = props.pages[currentPage].onNextPage;
+            console.log(answers[props.pages[currentPage].name])
             setLoadingMessage(action[2])
-            fetch(`http://${process.env.BACKEND_URL}/${action[1]}`, {
+            fetch(`http://${process.env.REACT_APP_BACKEND_URL}/${action[1]}`, {
                 method: action[0],
                 headers: {
                     'Accept': 'application/json',
@@ -61,7 +62,7 @@ function Survey(props) {
 
         const action = props.onFinish;
 
-        fetch(`http://${process.env.BACKEND_URL}/${action[1]}`, {
+        fetch(`http://${process.env.REACT_APP_BACKEND_URL}/${action[1]}`, {
             method: action[0],
             headers: {
                 'Accept': 'application/json',

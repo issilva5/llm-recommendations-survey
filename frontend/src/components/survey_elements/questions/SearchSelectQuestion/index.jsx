@@ -1,31 +1,41 @@
 import React, { useState } from 'react';
 import styles from "./style.module.css";
+import { JSONSet } from '../../../../utils';
 
+let controller, signal
 const SearchSelectQuestion = (props) => {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
-    const [selected, setSelected] = useState(props.answer || new Set());
+    const [selected, setSelected] = useState(props.answer || new JSONSet());
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [message, setMessage] = useState(selected.size < props.maxSelection ? "Please type a search query of at least 3 characters!" : "You've selected the maximum number of options possible.");
 
     const handleInputChange = (event) => {
 
-        const newQuery = event.target.value;
+        if (controller) {
+            controller.abort()
+        }
 
+        const newQuery = event.target.value;
         setQuery(newQuery);
 
-        if (newQuery.length < 3) {
+        if (newQuery.trim().length < 3) {
             setResults([]);
             setMessage("Please type a search query of at least 3 characters!");
             return
         }
 
+        controller = new AbortController()
+        signal = controller.signal
+
         setResults([]);
         setMessage("Searching...")
-        fetch(`http://omdbapi.com/?s=${newQuery.trim()}&apikey=${process.env.OMDB_API_KEY}&t=movie`)
+        fetch(`http://omdbapi.com/?s=${newQuery.trim()}&apikey=${process.env.REACT_APP_OMDB_API_KEY}&t=movie`, {
+            signal: signal,
+        })
             .then(response => response.json())
             .then(data => {
-                
+
                 if (data.Response === "True") {
 
                     let queryResult = data.Search.filter((e) => { return e.Poster !== "N/A" });
@@ -41,6 +51,9 @@ const SearchSelectQuestion = (props) => {
 
                 setIsDropdownOpen(true)
 
+            })
+            .catch(err => {
+                console.log(err)
             });
 
     };
