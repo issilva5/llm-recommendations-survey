@@ -49,25 +49,11 @@ const questionsEvaluation = [
 
   const questionsPreferences = [
     {
-      type: "text",
-      title: "What sort of movies do you like?",
-      isRequired: true,
-      maxLength: 500,
-      minLength: 150
-    },
-    {
       type: "search-select",
       title: "Name three of your favorite movies.",
       isRequired: true,
       minSelection: 3,
       maxSelection: 3
-    },
-    {
-      type: "text",
-      title: "What sort of movies do you dislike?",
-      isRequired: true,
-      maxLength: 500,
-      minLength: 150
     },
     {
       type: "search-select",
