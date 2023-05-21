@@ -1,13 +1,13 @@
 import PageHeader from "../../textual/PageHeader";
+import GroupQuestionPage from "../GroupQuestionPage";
 import InfoPage from "../InfoPage";
-import QuestionPage from "../QuestionPage";
 import RecPage from "../RecPage";
 import RecQuestionPage from "../RecQuestionPage";
 
 function Page(props) {
 
     const pageTypes = {
-        "question": QuestionPage,
+        "question": GroupQuestionPage,
         "recommendation": RecPage,
         "rec-question": RecQuestionPage,
         "text": InfoPage

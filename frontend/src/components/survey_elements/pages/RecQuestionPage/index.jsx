@@ -1,12 +1,12 @@
 import React from "react";
-import QuestionPage from "../QuestionPage";
+import GroupQuestionPage from "../GroupQuestionPage";
 import RecPage from "../RecPage";
 
 function RecQuestionPage(props) {
     return (
         <>
             <RecPage {...props}/>
-            <QuestionPage {...props} />
+            <GroupQuestionPage {...props} />
         </>
     );
 }

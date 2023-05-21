@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import Question from "../../questions/Question";
 
-const getDefaultInvalidMessages = (questions) => {
+const getDefaultInvalidMessages = (startAt, questions) => {
     let invalidMessages = {}
     questions.forEach((q, i) => {
         invalidMessages = {
             ...invalidMessages,
-            [i+1]: q.isRequired ? "This question is mandatory." : ""
+            [startAt+i+1]: q.isRequired ? "This question is mandatory." : ""
         }
     })
     return invalidMessages;
@@ -15,10 +15,10 @@ const getDefaultInvalidMessages = (questions) => {
 function QuestionPage(props) {
 
     const [answers, setAnswers] = useState(props.answers || {});
-    const [invalidQuestions, setInvalidQuestions] = useState(props.invalidMessages || getDefaultInvalidMessages(props.questions));
+    const [invalidQuestions, setInvalidQuestions] = useState(props.invalidMessages || getDefaultInvalidMessages(props.startAt, props.questions));
 
     useEffect(() => {
-        props.onAnswer(props.pageNumber, answers, invalidQuestions);
+        props.onAnswer(props.groupNumber, answers, invalidQuestions);
     }, [])
 
     const onAnswer = (number, answer, invalidMessage) => {
@@ -36,7 +36,7 @@ function QuestionPage(props) {
         setAnswers(newAnswers)
         setInvalidQuestions(newValid)
 
-        props.onAnswer(props.pageNumber, newAnswers, newValid);
+        props.onAnswer(props.groupNumber, newAnswers, newValid);
 
     }
 
@@ -46,11 +46,11 @@ function QuestionPage(props) {
                 props.questions.map((question, i) => {
                     return <Question
                         key={i}
-                        questionNumber={i + 1}
+                        questionNumber={props.startAt + i + 1}
                         questionModel={question}
                         onAnswer={onAnswer}
                         answer={answers[i+1]}
-                        previousInvalidMessage={invalidQuestions[i+1]}
+                        previousInvalidMessage={invalidQuestions[props.startAt+i+1]}
                     />
                 })
             }

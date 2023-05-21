@@ -88,7 +88,6 @@ function Survey(props) {
                                 {...page}
                                 item={page.itemID < recommendations.length ? recommendations[page.itemID] : page.item}
                                 pageNumber={i}
-                                invalidMessages={invalidPages[currentPage]}
                                 onAnswer={onAnswer}
                                 answers={answers[props.pages[i].name]}
                                 visible={!loadingMessage && i === currentPage}
@@ -116,7 +115,7 @@ function Survey(props) {
                                 <button
                                     className={styles.nextButton}
                                     onClick={setNextPage}
-                                    disabled={invalidPages[currentPage] && Object.keys(invalidPages[currentPage]).reduce((acc, curr) => acc + invalidPages[currentPage][curr], '') !== ""}
+                                    disabled={invalidPages[currentPage]}
                                 >Next</button> :
                                 <></>
                         }
@@ -125,6 +124,7 @@ function Survey(props) {
                                 <button
                                     className={styles.nextButton}
                                     onClick={() => onFinish()}
+                                    disabled={invalidPages[currentPage]}
                                 >Finish</button> :
                                 <></>
                         }

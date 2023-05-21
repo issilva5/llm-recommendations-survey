@@ -15,7 +15,7 @@ const questionsEvaluation = [
     ]
   },
   {
-    groupName: "About the recommendation",
+    groupName: "About the explanation",
     continueNumeration: true,
     questions: [
       {
@@ -60,18 +60,22 @@ const questionsEvaluation = [
 
 const questionsPreferences = [
   {
-    type: "search-select",
-    title: "Name three of your favorite movies.",
-    isRequired: true,
-    minSelection: 3,
-    maxSelection: 3
-  },
-  {
-    type: "search-select",
-    title: "Name three movies that you really disliked (or hated).",
-    isRequired: true,
-    minSelection: 3,
-    maxSelection: 3
+    questions: [
+      {
+        type: "search-select",
+        title: "Name three of your favorite movies.",
+        isRequired: true,
+        minSelection: 3,
+        maxSelection: 3
+      },
+      {
+        type: "search-select",
+        title: "Name three movies that you really disliked (or hated).",
+        isRequired: true,
+        minSelection: 3,
+        maxSelection: 3
+      }
+    ]
   }
 ]
 

@@ -83,7 +83,7 @@ const SearchSelectQuestion = (props) => {
 
     const handleRemove = (item) => {
 
-        const newSelection = new Set([...selected].filter(x => x !== item));
+        const newSelection = new JSONSet([...selected].filter(x => x !== item));
 
         setSelected(newSelection);
 
