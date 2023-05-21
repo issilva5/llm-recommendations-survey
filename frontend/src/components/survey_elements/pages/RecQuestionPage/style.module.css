@@ -1,0 +1,42 @@
+.recPage {
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+}
+
+.recItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.recPoster {
+    width: 200px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.recTitle {
+    font-size: 16px;
+    margin: 0;
+}
+
+.recExplanation {
+    display: flex;
+    flex-grow: 1;
+    margin: 0;
+    height: 300px;
+}
+
+.recExplanationText {
+    margin: 0;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.recExplanationBox {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+}
