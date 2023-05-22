@@ -5,7 +5,7 @@ import SearchSelectQuestion from "../SearchSelectQuestion";
 import TextQuestion from "../TextQuestion";
 import styles from "./style.module.css";
 
-function Question({ questionNumber, questionModel, onAnswer, answer, previousInvalidMessage }) {
+function Question({ questionNumber, questionModel, onAnswer, answer, previousInvalidMessage, negative }) {
 
     const [invalidMessage, setInvalidMessage] = useState(previousInvalidMessage || "");
 
@@ -26,7 +26,7 @@ function Question({ questionNumber, questionModel, onAnswer, answer, previousInv
     return (
         <div className={styles.question}>
             <p className={styles.questionEnunciation}>
-                {questionNumber}. {questionModel.title}
+                {questionNumber}. {negative && questionModel.negativeTitle ? questionModel.negativeTitle : questionModel.title}
                 <span className={styles.required}>
                     {questionModel.isRequired ? '*' : ''}
                 </span>

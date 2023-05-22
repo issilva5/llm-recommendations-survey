@@ -73,7 +73,7 @@ function GroupQuestionPage(props) {
 
         let isInvalid = false;
         let invM = Object.keys(newValidC).reduce((acc, curr) => acc + newValidC[curr], '')
-        if (invM !== '' || Object.keys(newValid).length != props.questions.length) isInvalid = true;
+        if (invM !== '' || Object.keys(newValid).length !== props.questions.length) isInvalid = true;
 
         props.onAnswer(props.pageNumber, newAnswersC, isInvalid);
 

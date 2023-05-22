@@ -6,7 +6,7 @@ function RecQuestionPage(props) {
     return (
         <>
             <RecPage {...props}/>
-            <GroupQuestionPage {...props} />
+            <GroupQuestionPage {...props} negative={!props.item.shouldWatch}/>
         </>
     );
 }

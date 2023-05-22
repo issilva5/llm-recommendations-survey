@@ -47,9 +47,10 @@ function QuestionPage(props) {
                     return <Question
                         key={i}
                         questionNumber={props.startAt + i + 1}
+                        negative={props.negative}
                         questionModel={question}
                         onAnswer={onAnswer}
-                        answer={answers[i+1]}
+                        answer={answers[props.startAt+i+1]}
                         previousInvalidMessage={invalidQuestions[props.startAt+i+1]}
                     />
                 })

@@ -6,6 +6,7 @@
 
 .recItem {
     display: flex;
+    position: relative;
     flex-direction: column;
     align-items: center;
     margin-right: 20px;
@@ -24,6 +25,7 @@
 
 .recExplanation {
     display: flex;
+    position: relative;
     flex-grow: 1;
     margin: 0;
     height: 300px;
@@ -37,6 +39,23 @@
 
 .recExplanationBox {
     border: 1px solid #ccc;
-    padding: 20px;
+    padding: 30px;
     border-radius: 8px;
+}
+
+.recInfo {
+    margin-top: 20px;
+    font-weight: bolder;
+}
+
+.fltLabel {
+    position: absolute;
+    font-weight: bold;
+    left: 0px;
+    padding: 0 5px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #007bff;
+    border: 1px solid black;
+    border-bottom-right-radius: 5px;
 }
