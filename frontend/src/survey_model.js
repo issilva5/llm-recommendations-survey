@@ -4,30 +4,20 @@ const questionsEvaluation = [
     questions: [
       {
         type: "boolean",
-        title: "Have you watched this movie previously?",
+        title: "Do you know this movie?",
         isRequired: true
       },
       {
         type: "likert",
-        title: "How much did you like this recommendation?",
-        negativeTitle: "How much did you dislike this recommendation?",
+        title: "I enjoy this recommendation.",
+        negativeTitle: "I don't enjoy this recommendation.",
         isRequired: true,
         options: [
-          "Not at all",
-          "A bit",
-          "Quite a lot",
-          "Very much"
-        ]
-      },
-      {
-        type: "likert",
-        title: "This recommendation was surprising / novel to me.",
-        isRequired: true,
-        options: [
-          "Not at all",
-          "A bit",
-          "Quite a lot",
-          "Very much"
+          "Strongly disagree",
+          "Disagree",
+          "Neutral",
+          "Agree",
+          "Strongly agree"
         ]
       },
     ]
@@ -51,8 +41,8 @@ const questionsEvaluation = [
       },
       {
         type: "likert",
-        title: "This explanation resonates well with aspects of movies that I favor / like",
-        negativeTitle: "This explanation resonates well with aspects of movies that I disfavor / dislike",
+        title: "This explanation resonates well with aspects of movies that I like.",
+        negativeTitle: "This explanation resonates well with aspects of movies that I dislike.",
         isRequired: true,
         options: [
           "Strongly disagree",
@@ -64,7 +54,7 @@ const questionsEvaluation = [
       },
       {
         type: "likert",
-        title: "This explanation is convincing / persuasive.",
+        title: "This explanation is convincing.",
         isRequired: true,
         options: [
           "Strongly disagree",
