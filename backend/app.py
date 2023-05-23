@@ -12,7 +12,7 @@ CORS(app)
 @app.route('/recommendations', methods=['POST'])
 def recommendations():
     request_data = request.get_json()
-    return open_ai.ask_recommendations(request_data)
+    return open_ai.get_recommendations(request_data)
 
 @app.route('/evaluation', methods=['POST'])
 def evaluation():

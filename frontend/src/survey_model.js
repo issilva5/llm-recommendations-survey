@@ -140,6 +140,24 @@ const pages = [
     questions: questionsEvaluation
   },
   {
+    type: "rec-question",
+    name: "rec-eval5",
+    title: "Part II - Recommendations",
+    description: "In this section, we will present you four recommendations and ask you to evaluate them.",
+    itemID: 4,
+    nowayback: true,
+    questions: questionsEvaluation
+  },
+  {
+    type: "rec-question",
+    name: "rec-eval6",
+    title: "Part II - Recommendations",
+    description: "In this section, we will present you four recommendations and ask you to evaluate them.",
+    itemID: 5,
+    nowayback: true,
+    questions: questionsEvaluation
+  },
+  {
     type: "text",
     name: "thanks",
     text: "Thanks for participating!",
