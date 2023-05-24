@@ -1,5 +1,5 @@
 from .gpt_rec import GPTRecommender
-from .popular_rec import PopRecommender
+from .random_rec import RandomRecommender
 
 import openai
 import os
@@ -42,7 +42,7 @@ def get_gpt_recs(preferences):
     return gptRec.get_recommendations(prompt)
 
 def get_pop_recs(n):
-    popRec = PopRecommender("data/imdb-top50-per-genre-votes.csv")
+    popRec = RandomRecommender("data/imdb-top50-per-genre-votes.csv")
     return popRec.get_recommendations(n)
 
 def get_recommendations(preferences):

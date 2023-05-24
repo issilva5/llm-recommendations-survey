@@ -1,7 +1,7 @@
 import random
 from ..utils import get_movie_poster
 
-class PopRecommender():
+class RandomRecommender():
 
     def __init__(self, database_path) -> None:
         
@@ -17,7 +17,7 @@ class PopRecommender():
                 self.movies.append({
                     'imdbID': imdb_id,
                     'title': title.strip('\n\"'),
-                    'recommender': 'random-top250-imdb'
+                    'recommender': 'random-imdb'
                 })
     
     def get_recommendations(self, n = 2):
