@@ -30,10 +30,19 @@ def recommendations():
     
     return recommendations
 
+"""
+'rec-eval1': {'1': 'false', '2': 5, '3': 5, '4': 5, '5': 5}, 'rec-eval2': {'1': 'false', '2': 5, '3': 5, '4': 5, '5': 5}, 'rec-eval3': {'1': 'true', '2': 5, '3': 5, '4': 5, '5': 5}, 'rec-eval4': {'1': 'false', '2': 5, '3': 5, '4': 5, '5': 5}, 'rec-eval5': {'1': 'true', '2': 5, '3': 5, '4': 5, '5': 5}, 'rec-eval6': {'1': 'false', '2': 5, '3': 5, '4': 5, '5': 5}}
+"""
+
 @app.route('/evaluation', methods=['POST'])
 def evaluation():
     request_data = request.get_json()
-    print(request_data)
+    session_id = request.headers.get('Llm-Rec-Session-Id')
+    number_of_evaluations = 6
+    for i in range(1, number_of_evaluations+1):
+        eval_resp = request_data[f'rec-eval{i}']
+        for k, v in eval_resp.items():
+            bd.insert_evaluation(session_id, i, int(k), v)
     return ""
 
 if __name__ == '__main__':

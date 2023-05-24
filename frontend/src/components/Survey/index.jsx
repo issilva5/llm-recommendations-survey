@@ -45,7 +45,8 @@ function Survey(props) {
                 method: action[0],
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Llm-Rec-Session-Id': localStorage.getItem('llm_rec_session_id')
                 },
                 body: JSON.stringify(answers[props.pages[currentPage].name])
             })
@@ -66,7 +67,8 @@ function Survey(props) {
             method: action[0],
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Llm-Rec-Session-Id': localStorage.getItem('llm_rec_session_id')
             },
             body: JSON.stringify(answers)
         })
