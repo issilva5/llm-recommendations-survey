@@ -3,7 +3,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 
-import open_ai
+from src.recommenders import get_recommendations
 
 load_dotenv()
 app = Flask(__name__)
@@ -12,7 +12,7 @@ CORS(app)
 @app.route('/recommendations', methods=['POST'])
 def recommendations():
     request_data = request.get_json()
-    return open_ai.get_recommendations(request_data)
+    return get_recommendations(request_data)
 
 @app.route('/evaluation', methods=['POST'])
 def evaluation():

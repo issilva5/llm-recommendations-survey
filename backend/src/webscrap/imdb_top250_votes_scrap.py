@@ -1,6 +1,6 @@
 import scrapy
 
-class IMDbSpider(scrapy.Spider):
+class IMDbTop250Spider(scrapy.Spider):
     name = 'imdb_spider'
     start_urls = ['https://www.imdb.com/chart/top/?sort=nv,desc&mode=simple&page=1']
 

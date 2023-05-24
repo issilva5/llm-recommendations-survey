@@ -1,8 +1,10 @@
+from .gpt_rec import GPTRecommender
+from .popular_rec import PopRecommender
+
 import openai
 import os
 import random
 
-from src.recommenders import GPTRecommender, PopRecommender
 from openai.error import RateLimitError
 import time
 from dotenv import load_dotenv

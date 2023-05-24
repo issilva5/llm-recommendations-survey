@@ -3,14 +3,14 @@ from ..utils import get_movie_poster
 
 class PopRecommender():
 
-    def __init__(self) -> None:
+    def __init__(self, database_path) -> None:
         
         self.movies = []
-        self._read_database()
+        self._read_database(database_path)
 
-    def _read_database(self):
+    def _read_database(self, database_path):
 
-        with open('data/movies.csv', 'r') as movies:
+        with open(database_path, 'r') as movies:
             movies.readline()
             for movie in movies:
                 imdb_id, title = movie.split(',', maxsplit=1)
