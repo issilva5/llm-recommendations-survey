@@ -100,8 +100,15 @@ const pages = [
     name: "user_preferences",
     title: "Part I - User Preferences",
     description: "In this section, we are interested in understanding a little more about your movies preferences.",
+    onNextPage: ["POST", "/recommendations", "user_preferences", "Wait while we process your recommendations..."],
     questions: questionsPreferences,
-    onNextPage: ["POST", "/recommendations", "Wait while we process your recommendations..."]
+  },
+  {
+    type: "text",
+    name: "intro-part2",
+    title: "Part II - Recommendations",
+    nowayback: true,
+    text: "In this section, we'll feature four movies that our recommendation system thinks you might like. Each film will be accompanied by an explanation of why you might like it. After each film is shown, you will be asked to complete a few questions to assess the recommendation."
   },
   {
     type: "rec-question",
@@ -140,10 +147,16 @@ const pages = [
     questions: questionsEvaluation
   },
   {
+    type: "text",
+    name: "intro-part3",
+    title: "Part III - Non-recommendations",
+    text: "In this section, we'll feature two movies that our recommendation system thinks you might not like. Each film will be accompanied by an explanation of why you might not like it. After each film is shown, you will be asked to complete a few questions to assess the non-recommendation."
+  },
+  {
     type: "rec-question",
     name: "rec-eval5",
-    title: "Part II - Recommendations",
-    description: "In this section, we will present you four recommendations and ask you to evaluate them.",
+    title: "Part III - Non-recommendations",
+    description: "In this section, we will present you two non-recommendations and ask you to evaluate them.",
     itemID: 4,
     nowayback: true,
     questions: questionsEvaluation
@@ -151,8 +164,8 @@ const pages = [
   {
     type: "rec-question",
     name: "rec-eval6",
-    title: "Part II - Recommendations",
-    description: "In this section, we will present you four recommendations and ask you to evaluate them.",
+    title: "Part III - Non-recommendations",
+    description: "In this section, we will present you two non-recommendations and ask you to evaluate them.",
     itemID: 5,
     nowayback: true,
     questions: questionsEvaluation

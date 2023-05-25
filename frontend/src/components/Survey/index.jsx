@@ -39,8 +39,7 @@ function Survey(props) {
 
         if (props.pages[currentPage].onNextPage) {
             const action = props.pages[currentPage].onNextPage;
-            console.log(answers[props.pages[currentPage].name])
-            setLoadingMessage(action[2])
+            setLoadingMessage(action[3])
             fetch(`http://${process.env.REACT_APP_BACKEND_URL}/${action[1]}`, {
                 method: action[0],
                 headers: {
@@ -48,7 +47,7 @@ function Survey(props) {
                     'Content-Type': 'application/json',
                     'Llm-Rec-Session-Id': localStorage.getItem('llm_rec_session_id')
                 },
-                body: JSON.stringify(answers[props.pages[currentPage].name])
+                body: JSON.stringify(answers[action[2]])
             })
                 .then(response => response.json())
                 .then(response => {
