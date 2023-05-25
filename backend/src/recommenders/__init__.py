@@ -4,6 +4,7 @@ from .random_rec import RandomRecommender
 import openai
 import os
 import random
+import threading
 
 from openai.error import RateLimitError
 import time
@@ -15,10 +16,10 @@ openai.api_key = os.getenv("OPEN_API_KEY")
 
 def fill_base_prompt(preferences):
     return f"""Given the answers for the following questions about the movie preferences of a person.
-    Question 1: Name three of your favorite movies (separeted by semicolon).
+    Question 1: Name three of your favorite movies (separated by semicolon).
     Answer 1: {"; ".join([movie['Title'] for movie in preferences['1']])}
 
-    Question 2: Name three movies that you really disliked (or hated).
+    Question 2: Name three movies that you really disliked or hated (separated by semicolon).
     Answer 2: {"; ".join([movie['Title'] for movie in preferences['2']])}
 
     """
@@ -57,33 +58,55 @@ def get_recommendations(preferences):
     userBasedExplanationsSNW = random.sample([False,True],2)
 
     basePrompt = fill_base_prompt(preferences)
+
+    threads = []
+    explanations = {}
+
     for i, movie in enumerate(shouldWatchRecommendations):
         movie['userBasedExplanation'] = userBasedExplanationsSW[i]
-        movie['explanation'] = get_explanation(movie['title'], 
-                                               True, 
-                                               userBasedExplanationsSW[i],
-                                               basePrompt)
+        threads.append(
+            threading.Thread(target=get_explanation,
+                             args=(movie['title'], 
+                                   True, 
+                                   userBasedExplanationsSW[i],
+                                   basePrompt,
+                                   explanations,))
+        )
     
     for i, movie in enumerate(shouldNotWatchRecommendations):
         movie['userBasedExplanation'] = userBasedExplanationsSNW[i]
-        movie['explanation'] = get_explanation(movie['title'], 
-                                               False, 
-                                               userBasedExplanationsSNW[i],
-                                               basePrompt)
+        threads.append(
+            threading.Thread(target=get_explanation,
+                             args=(movie['title'], 
+                                   False, 
+                                   userBasedExplanationsSNW[i],
+                                   basePrompt,
+                                   explanations,))
+        )
+    
+    for t in threads:
+        t.start()
+    
+    for t in threads:
+        t.join()
 
     random.shuffle(shouldWatchRecommendations)
-    recommendations = {'recommendations': shouldWatchRecommendations + shouldNotWatchRecommendations}
+    movie_recs = shouldWatchRecommendations + shouldNotWatchRecommendations
+    for movie in movie_recs:
+        movie['explanation'] = explanations[movie['title']]
+    
+    recommendations = {'recommendations': movie_recs}
     
     return recommendations
 
-def get_explanation(movie, shouldWatch, userBased, userBasedBasePrompt):
+def get_explanation(movie, shouldWatch, userBased, userBasedBasePrompt, explanations):
 
     print(movie)
 
     prompt = f"""Why should {"someone with these preferences" if userBased else "someone"} {"not" if not shouldWatch else ""} watch the movie: {movie}?.
     
     Additional instructions:
-     1. Write the answer as a plain text with at least 300 and at most 500 characters and without any additional text besides the answer.
+     1. Write the answer as a plain text with at least 300 and at most 350 characters and without any additional text besides the answer.
      2. Write the explanation as if you was talking to someone, for example: 'You may like this and that'.
      {"3. Don't use 'Based on the answers provided' on the explanation." if userBased else ""}
     """
@@ -112,6 +135,7 @@ def get_explanation(movie, shouldWatch, userBased, userBasedBasePrompt):
             done = True
         
         except RateLimitError:
+            print('Going to sleep.')
             time.sleep(60)
     
-    return response["choices"][0]["message"]["content"]
+    explanations[movie] = response["choices"][0]["message"]["content"]
