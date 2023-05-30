@@ -38,7 +38,7 @@ const SearchSelectQuestion = (props) => {
 
                 if (data.Response === "True") {
 
-                    let queryResult = data.Search.filter((e) => { return e.Poster !== "N/A" });
+                    let queryResult = data.Search.filter((e) => { return e.Poster !== "N/A" && parseInt(e.Year) < 2021 });
                     if (queryResult.length === 0) {
                         setResults([])
                         setMessage("Movie not found!")
