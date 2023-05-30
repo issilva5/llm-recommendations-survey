@@ -10,7 +10,6 @@ const questionsEvaluation = [
       {
         type: "likert",
         title: "I enjoy this recommendation.",
-        negativeTitle: "I don't enjoy this recommendation.",
         isRequired: true,
         options: [
           "Strongly disagree",
