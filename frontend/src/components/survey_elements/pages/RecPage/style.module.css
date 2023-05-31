@@ -41,6 +41,7 @@
     border: 1px solid #ccc;
     padding: 30px;
     border-radius: 8px;
+    overflow-y: auto;
 }
 
 .recInfo {
@@ -58,4 +59,16 @@
     background-color: #007bff;
     border: 1px solid black;
     border-bottom-right-radius: 5px;
+}
+
+@media (max-width: 800px) {
+
+    .recPage {
+        flex-direction: column;
+    }
+
+    .recItem {
+        margin-bottom: 10px;
+    }
+
 }
