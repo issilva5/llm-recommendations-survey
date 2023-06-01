@@ -168,7 +168,7 @@ const pages = [
   {
     type: "text",
     name: "thanks",
-    text: "Thanks for participating!",
+    text: "Thanks for participating! We are saving your response, you will be redirected back to Prolific in an instant.",
     nowayback: true
   }
 ]

@@ -3,7 +3,7 @@ import styles from "./style.module.css";
 import Page from "../survey_elements/pages/Page";
 import Title from "../survey_elements/textual/Title";
 import LoadingPage from "../survey_elements/pages/LoadingPage";
-import { redirect, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 
@@ -90,6 +90,9 @@ function Survey(props) {
                 'Study-Id': localStorage.getItem('STUDY_ID')
             },
             body: JSON.stringify(answers)
+        })
+        .then(() => {
+            window.location.replace('https://app.prolific.co/submissions/complete?cc=CJGKLQRO')
         })
 
         setCurrentPage(currentPage => currentPage + 1)
