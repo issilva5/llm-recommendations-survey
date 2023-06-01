@@ -99,7 +99,7 @@ const SearchSelectQuestion = (props) => {
     return (
         <div className={styles.search}>
             <div
-                onClick={() => setIsDropdownOpen(true)}
+                onMouseEnter={() => setIsDropdownOpen(true)}
                 onMouseLeave={() => setIsDropdownOpen(false)}
             >
                 {isDropdownOpen && results.length > 0 && (
