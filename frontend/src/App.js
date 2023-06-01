@@ -1,19 +1,17 @@
 import Survey from "./components/Survey";
 import { survey } from "./survey_model";
-import React, { useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Error from "./components/Error";
 
 function App() {
 
-  useEffect(() => {
-    let sessionId = localStorage.getItem('llm_rec_session_id');
-    if (!sessionId) {
-      sessionId = uuidv4();
-      localStorage.setItem('llm_rec_session_id', sessionId);
-    }
-  }, []);
-
-  return <Survey  {...survey} />;
+  return <Router>
+    <Routes>
+      <Route path="/" element={<Survey  {...survey} />} />
+      <Route path="/error" element={<Error />} />
+    </Routes>
+  </Router>
 
 }
 

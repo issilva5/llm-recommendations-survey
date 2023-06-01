@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./style.module.css";
 import Page from "../survey_elements/pages/Page";
 import Title from "../survey_elements/textual/Title";
 import LoadingPage from "../survey_elements/pages/LoadingPage";
+import { redirect, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 function Survey(props) {
 
@@ -11,6 +14,14 @@ function Survey(props) {
     const [loadingMessage, setLoadingMessage] = useState(undefined);
     const [recommendations, setRecommendations] = useState([]);
     const [invalidPages, setInvalidPages] = useState({});
+    const [searchParams, setSearchParams] = useSearchParams();
+    let navigate = useNavigate();
+
+    useEffect(() => {
+        localStorage.setItem('PROLIFIC_PID', searchParams.get('PROLIFIC_PID'));
+        localStorage.setItem('STUDY_ID', searchParams.get('STUDY_ID'));
+        localStorage.setItem('SESSION_ID', searchParams.get('SESSION_ID'));
+    }, [])
 
     const onAnswer = (pageNumber, answer, invalidMessages) => {
 
@@ -46,12 +57,18 @@ function Survey(props) {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Llm-Rec-Session-Id': localStorage.getItem('llm_rec_session_id')
+                    'Session-Id': localStorage.getItem('SESSION_ID'),
+                    'Prolific-Pid': localStorage.getItem('PROLIFIC_PID'),
+                    'Study-Id': localStorage.getItem('STUDY_ID')
                 },
                 body: JSON.stringify(answers[action[2]])
             })
                 .then(response => response.json())
                 .then(response => {
+
+                    if (response['error'])
+                        navigate("/error", {state:{"error": response['error']}})
+
                     setRecommendations(response['recommendations'])
                     setLoadingMessage(undefined)
                 })
@@ -68,7 +85,9 @@ function Survey(props) {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Llm-Rec-Session-Id': localStorage.getItem('llm_rec_session_id')
+                'Session-Id': localStorage.getItem('SESSION_ID'),
+                'Prolific-Pid': localStorage.getItem('PROLIFIC_PID'),
+                'Study-Id': localStorage.getItem('STUDY_ID')
             },
             body: JSON.stringify(answers)
         })
