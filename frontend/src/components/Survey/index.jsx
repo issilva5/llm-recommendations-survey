@@ -2,6 +2,7 @@ import { useState } from "react";
 import styles from "./style.module.css";
 import Page from "../survey_elements/pages/Page";
 import Title from "../survey_elements/textual/Title";
+import LoadingPage from "../survey_elements/pages/LoadingPage";
 
 function Survey(props) {
 
@@ -96,7 +97,7 @@ function Survey(props) {
                         })
                     }
                     {
-                        loadingMessage && <p>{loadingMessage}</p>
+                        <LoadingPage loadingMessage={loadingMessage} />
                     }
                 </div>
                 <div className={styles.buttons}>
