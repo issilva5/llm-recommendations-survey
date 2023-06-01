@@ -144,6 +144,7 @@ const pages = [
     type: "text",
     name: "intro-part3",
     title: "Part III - Non-recommendations",
+    nowayback: true,
     text: "In this section, we'll feature two movies that our recommendation system thinks you might not like. Each film will be accompanied by an explanation of why you might not like it. After each film is shown, you will be asked to complete a few questions to assess the non-recommendation."
   },
   {
