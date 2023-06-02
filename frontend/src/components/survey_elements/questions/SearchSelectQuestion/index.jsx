@@ -30,7 +30,7 @@ const SearchSelectQuestion = (props) => {
 
         setResults([]);
         setMessage("Searching...")
-        fetch(`http://omdbapi.com/?s=${newQuery.trim()}&apikey=${process.env.REACT_APP_OMDB_API_KEY}&type=movie`, {
+        fetch(`https://omdbapi.com/?s=${newQuery.trim()}&apikey=${process.env.REACT_APP_OMDB_API_KEY}&type=movie`, {
             signal: signal,
         })
             .then(response => response.json())
