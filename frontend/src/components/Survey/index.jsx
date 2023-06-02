@@ -5,6 +5,7 @@ import Title from "../survey_elements/textual/Title";
 import LoadingPage from "../survey_elements/pages/LoadingPage";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
 
 function Survey(props) {
@@ -18,9 +19,9 @@ function Survey(props) {
     let navigate = useNavigate();
 
     useEffect(() => {
-        localStorage.setItem('PROLIFIC_PID', searchParams.get('PROLIFIC_PID'));
-        localStorage.setItem('STUDY_ID', searchParams.get('STUDY_ID'));
-        localStorage.setItem('SESSION_ID', searchParams.get('SESSION_ID'));
+        localStorage.setItem('PROLIFIC_PID', searchParams.get('PROLIFIC_PID') || ("NON-PROLIFIC-" + uuidv4()));
+        localStorage.setItem('STUDY_ID', searchParams.get('STUDY_ID') || ("NON-PROLIFIC-" + uuidv4()));
+        localStorage.setItem('SESSION_ID', searchParams.get('SESSION_ID') || ("NON-PROLIFIC-" + uuidv4()));
     }, [])
 
     const onAnswer = (pageNumber, answer, invalidMessages) => {
