@@ -1,4 +1,7 @@
 import psycopg2
+import pandas as pd
+import zipfile
+import time
 
 class ExperimentDatabase():
 
@@ -50,6 +53,17 @@ class ExperimentDatabase():
             rows = cursor.fetchall()
             cursor.close()
             return len(rows) != 0
+        except (Exception, psycopg2.Error) as error:
+            print("Error while retrieving preference data:", error)
+            return []
+    
+    def get_participants(self):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute('SELECT * FROM "participants"')
+            rows = cursor.fetchall()
+            cursor.close()
+            return rows
         except (Exception, psycopg2.Error) as error:
             print("Error while retrieving preference data:", error)
             return []
@@ -178,3 +192,19 @@ class ExperimentDatabase():
         except (Exception, psycopg2.Error) as error:
             print("Error while retrieving evaluation data:", error)
             return []
+    
+    def retrive_data(self):
+
+        participants = pd.DataFrame(self.get_participants(), columns=['prolificPID', 'studyID', 'sessionID'])
+        preferences = pd.DataFrame(self.get_preferences(), columns=['prolificPID', 'movieTitle', 'liked'])
+        recommendations = pd.DataFrame(self.get_recommendations(), columns=['prolificPID', 'recID', 'movieTitle', 'shouldWatch', 'userBasedExp', 'explanation', 'recommender'])
+        evaluations = pd.DataFrame(self.get_evaluations(), columns=['prolificPID', 'recID', 'questionNumber', 'response'])
+        
+        zipfile_name = 'data/bd_data_' + str(int(time.time())) + '.zip'
+        with zipfile.ZipFile(zipfile_name, 'w') as csv_zip:
+            csv_zip.writestr('participants.csv', participants.to_csv(index=False))
+            csv_zip.writestr('preferences.csv', preferences.to_csv(index=False))
+            csv_zip.writestr('recommendations.csv', recommendations.to_csv(index=False))
+            csv_zip.writestr('evaluations.csv', evaluations.to_csv(index=False))
+
+        return zipfile_name

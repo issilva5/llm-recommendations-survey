@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, send_file
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
@@ -58,6 +58,19 @@ def evaluation():
         for k, v in eval_resp.items():
             bd.insert_evaluation(prolific_pid, i, int(k), v)
     return ""
+
+@app.route('/data', methods=['GET'])
+def data():
+
+    admin_id = request.args.get('admin_id')
+    if admin_id != os.getenv('ADMIN_ID'):
+        return "Forbidden", 401
+
+    zipfile_name = bd.retrive_data()
+    return send_file(zipfile_name,
+                 mimetype='zip',
+                 download_name=zipfile_name.split('/')[1],
+                 as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=os.getenv("PORT"))
