@@ -24,7 +24,7 @@ function QuestionPage(props) {
 
     const onAnswer = (number, answer, invalidMessage) => {
         
-        if (props.answersShouldDiff[number]) {
+        if (props.answersShouldDiff && props.answersShouldDiff[number]) {
             props.answersShouldDiff[number].forEach((question) => {
 
                 if (answers[question]) {
