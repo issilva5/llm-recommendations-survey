@@ -25,7 +25,8 @@ class ExperimentDatabase():
             cursor.execute('''CREATE TABLE IF NOT EXISTS "participants" (
                                 prolificPID TEXT PRIMARY KEY,
                                 studyID TEXT,
-                                sessionID TEXT
+                                sessionID TEXT,
+                                created_at timestamp with time zone not null default CURRENT_TIMESTAMP
                             )''')
             self.conn.commit()
             cursor.close()
@@ -75,6 +76,7 @@ class ExperimentDatabase():
                                 prolificPID TEXT,
                                 movieTitle TEXT,
                                 liked BOOLEAN,
+                                created_at timestamp with time zone not null default CURRENT_TIMESTAMP,
                                 PRIMARY KEY (prolificPID, movieTitle),
                                 CONSTRAINT fk_participant
                                     FOREIGN KEY(prolificPID) 
@@ -119,6 +121,7 @@ class ExperimentDatabase():
                                 userBasedExp BOOLEAN,
                                 explanation TEXT,
                                 recommender TEXT,
+                                created_at timestamp with time zone not null default CURRENT_TIMESTAMP,
                                 PRIMARY KEY (prolificPID, recID),
                                 CONSTRAINT fk_participant
                                     FOREIGN KEY(prolificPID) 
@@ -160,6 +163,7 @@ class ExperimentDatabase():
                     recID INTEGER,
                     questionNumber INTEGER,
                     response TEXT,
+                    created_at timestamp with time zone not null default CURRENT_TIMESTAMP,
                     PRIMARY KEY (prolificPID, recID, questionNumber),
                     CONSTRAINT fk_participant
                         FOREIGN KEY(prolificPID) 
