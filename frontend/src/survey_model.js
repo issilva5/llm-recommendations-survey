@@ -94,7 +94,7 @@ const pages = [
     name: "user_preferences",
     title: "Part I - User Preferences",
     description: "In this section, we are interested in understanding a little more about your movies preferences.",
-    onNextPage: ["POST", "/recommendations", "user_preferences", "Wait while we process your recommendations... It may take up to one minute."],
+    onNextPage: ["POST", "/recommendations", "user_preferences", "Wait while we process your recommendations... It may take up to one minute. Do not refresh the page."],
     questions: questionsPreferences,
     answersShouldDiff: {1: [2], 2: [1]}
   },
