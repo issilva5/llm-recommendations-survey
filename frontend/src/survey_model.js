@@ -96,6 +96,7 @@ const pages = [
     description: "In this section, we are interested in understanding a little more about your movies preferences.",
     onNextPage: ["POST", "/recommendations", "user_preferences", "Wait while we process your recommendations... It may take up to one minute."],
     questions: questionsPreferences,
+    answersShouldDiff: {1: [2], 2: [1]}
   },
   {
     type: "text",

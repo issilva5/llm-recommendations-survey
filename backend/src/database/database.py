@@ -32,6 +32,8 @@ class ExperimentDatabase():
             cursor.close()
             print("participants table created successfully.")
         except (Exception, psycopg2.Error) as error:
+            self.conn.rollback()
+            cursor.close()
             print("Error while creating the preferences table:", error)
 
     def insert_participant(self, prolific_id, study_id, session_id):
@@ -43,8 +45,12 @@ class ExperimentDatabase():
             cursor.close()
             print("participant data inserted successfully.")
         except psycopg2.IntegrityError as error:
+            self.conn.rollback()
+            cursor.close()
             raise Exception(f"Participant with PROLIFIC_ID {prolific_id} has already answered.")
         except (Exception, psycopg2.Error) as error:
+            self.conn.rollback()
+            cursor.close()
             print("Error while inserting preference data:", error)
     
     def exists_participant(self, prolific_id):
@@ -55,6 +61,8 @@ class ExperimentDatabase():
             cursor.close()
             return len(rows) != 0
         except (Exception, psycopg2.Error) as error:
+            self.conn.rollback()
+            cursor.close()
             print("Error while retrieving preference data:", error)
             return []
     
@@ -66,6 +74,8 @@ class ExperimentDatabase():
             cursor.close()
             return rows
         except (Exception, psycopg2.Error) as error:
+            self.conn.rollback()
+            cursor.close()
             print("Error while retrieving preference data:", error)
             return []
 
@@ -86,6 +96,8 @@ class ExperimentDatabase():
             cursor.close()
             print("preferences table created successfully.")
         except (Exception, psycopg2.Error) as error:
+            self.conn.rollback()
+            cursor.close()
             print("Error while creating the preferences table:", error)
 
     def insert_preference(self, prolific_pid, movie_title, liked):
@@ -97,6 +109,8 @@ class ExperimentDatabase():
             cursor.close()
             print("preference data inserted successfully.")
         except (Exception, psycopg2.Error) as error:
+            self.conn.rollback()
+            cursor.close()
             print("Error while inserting preference data:", error)
 
     def get_preferences(self):
@@ -107,6 +121,8 @@ class ExperimentDatabase():
             cursor.close()
             return rows
         except (Exception, psycopg2.Error) as error:
+            self.conn.rollback()
+            cursor.close()
             print("Error while retrieving preference data:", error)
             return []
 
@@ -131,6 +147,8 @@ class ExperimentDatabase():
             cursor.close()
             print("Recommendation table created successfully.")
         except (Exception, psycopg2.Error) as error:
+            self.conn.rollback()
+            cursor.close()
             print("Error while creating the Recommendation table:", error)
 
     def insert_recommendation(self, profilic_pid, rec_id, movie_title, should_watch, user_based_exp, explanation, recommender):
@@ -142,6 +160,8 @@ class ExperimentDatabase():
             cursor.close()
             print("Recommendation data inserted successfully.")
         except (Exception, psycopg2.Error) as error:
+            self.conn.rollback()
+            cursor.close()
             print("Error while inserting recommendation data:", error)
 
     def get_recommendations(self):
@@ -152,6 +172,8 @@ class ExperimentDatabase():
             cursor.close()
             return rows
         except (Exception, psycopg2.Error) as error:
+            self.conn.rollback()
+            cursor.close()
             print("Error while retrieving recommendation data:", error)
             return []
 
@@ -173,6 +195,8 @@ class ExperimentDatabase():
             cursor.close()
             print("Evaluation table created successfully.")
         except (Exception, psycopg2.Error) as error:
+            self.conn.rollback()
+            cursor.close()
             print("Error while creating the Evaluation table:", error)
 
     def insert_evaluation(self, prolific_pid, rec_id, question_number, response):
@@ -184,6 +208,8 @@ class ExperimentDatabase():
             cursor.close()
             print("Evaluation data inserted successfully.")
         except (Exception, psycopg2.Error) as error:
+            self.conn.rollback()
+            cursor.close()
             print("Error while inserting evaluation data:", error)
 
     def get_evaluations(self):
@@ -194,6 +220,8 @@ class ExperimentDatabase():
             cursor.close()
             return rows
         except (Exception, psycopg2.Error) as error:
+            self.conn.rollback()
+            cursor.close()
             print("Error while retrieving evaluation data:", error)
             return []
     

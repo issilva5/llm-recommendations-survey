@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BooleanQuestion from "../BooleanQuestion";
 import LikertScaleQuestion from "../LikertQuestion";
 import SearchSelectQuestion from "../SearchSelectQuestion";
@@ -8,6 +8,10 @@ import styles from "./style.module.css";
 function Question({ questionNumber, questionModel, onAnswer, answer, previousInvalidMessage, negative }) {
 
     const [invalidMessage, setInvalidMessage] = useState(previousInvalidMessage || "");
+
+    useEffect(() => {
+        setInvalidMessage(previousInvalidMessage)
+    }, [previousInvalidMessage])
 
     const questionTypes = {
         "text": TextQuestion,
@@ -19,9 +23,10 @@ function Question({ questionNumber, questionModel, onAnswer, answer, previousInv
     const QuestionType = questionTypes[questionModel.type];
 
     const onAnswerQuestion = (answer, invalidMessage = "") => {
-        setInvalidMessage(invalidMessage)
         onAnswer(questionNumber, answer, invalidMessage)
     }
+
+    console.log(invalidMessage)
 
     return (
         <div className={styles.question}>

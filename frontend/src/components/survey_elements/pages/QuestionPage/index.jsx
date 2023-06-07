@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import Question from "../../questions/Question";
+import { JSONSet } from "../../../../utils";
 
 const getDefaultInvalidMessages = (startAt, questions) => {
     let invalidMessages = {}
     questions.forEach((q, i) => {
         invalidMessages = {
             ...invalidMessages,
-            [startAt+i+1]: q.isRequired ? "This question is mandatory." : ""
+            [startAt + i + 1]: q.isRequired ? "This question is mandatory." : ""
         }
     })
     return invalidMessages;
@@ -22,6 +23,20 @@ function QuestionPage(props) {
     }, [])
 
     const onAnswer = (number, answer, invalidMessage) => {
+        
+        if (props.answersShouldDiff[number]) {
+            props.answersShouldDiff[number].forEach((question) => {
+
+                if (answers[question]) {
+
+                    let intersect = new JSONSet([...answer].filter(i => answers[question].has(i)));
+                    if (intersect.size > 0)
+                        invalidMessage = `This answer cannot contain a movie provided in question ${question}`
+
+                }
+
+            })
+        }
 
         const newAnswers = {
             ...answers,
@@ -50,8 +65,8 @@ function QuestionPage(props) {
                         negative={props.negative}
                         questionModel={question}
                         onAnswer={onAnswer}
-                        answer={answers[props.startAt+i+1]}
-                        previousInvalidMessage={invalidQuestions[props.startAt+i+1]}
+                        answer={answers[props.startAt + i + 1]}
+                        previousInvalidMessage={invalidQuestions[props.startAt + i + 1]}
                     />
                 })
             }

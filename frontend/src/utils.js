@@ -10,4 +10,11 @@ export class JSONSet extends Set {
         return Set.prototype.add.call(this, o);
     };
 
+    has(o) {
+        for (let i of this)
+            if (i.imdbID === o.imdbID)
+                return true
+        return false;
+    };
+
 }

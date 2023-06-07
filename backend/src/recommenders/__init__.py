@@ -135,7 +135,7 @@ def get_explanation(movie, shouldWatch, userBased, userBasedBasePrompt, explanat
             done = True
         
         except RateLimitError:
-            print('Going to sleep.')
+            print(f'Going to sleep - {movie}')
             time.sleep(60)
     
     explanations[movie] = response["choices"][0]["message"]["content"]
