@@ -56,7 +56,7 @@ def evaluation():
     for i in range(1, number_of_evaluations+1):
         eval_resp = request_data[f'rec-eval{i}']
         for k, v in eval_resp.items():
-            bd.insert_evaluation(prolific_pid, i, int(k), v)
+            bd.insert_evaluation(prolific_pid, i-1, int(k), v)
     return ""
 
 @app.route('/data', methods=['GET'])
