@@ -227,10 +227,10 @@ class ExperimentDatabase():
     
     def retrive_data(self):
 
-        participants = pd.DataFrame(self.get_participants(), columns=['prolificPID', 'studyID', 'sessionID'])
-        preferences = pd.DataFrame(self.get_preferences(), columns=['prolificPID', 'movieTitle', 'liked'])
-        recommendations = pd.DataFrame(self.get_recommendations(), columns=['prolificPID', 'recID', 'movieTitle', 'shouldWatch', 'userBasedExp', 'explanation', 'recommender'])
-        evaluations = pd.DataFrame(self.get_evaluations(), columns=['prolificPID', 'recID', 'questionNumber', 'response'])
+        participants = pd.DataFrame(self.get_participants(), columns=['prolificPID', 'studyID', 'sessionID', 'created_at'])
+        preferences = pd.DataFrame(self.get_preferences(), columns=['prolificPID', 'movieTitle', 'liked', 'created_at'])
+        recommendations = pd.DataFrame(self.get_recommendations(), columns=['prolificPID', 'recID', 'movieTitle', 'shouldWatch', 'userBasedExp', 'explanation', 'recommender', 'created_at'])
+        evaluations = pd.DataFrame(self.get_evaluations(), columns=['prolificPID', 'recID', 'questionNumber', 'response', 'created_at'])
         
         zipfile_name = 'data/bd_data_' + str(int(time.time())) + '.zip'
         with zipfile.ZipFile(zipfile_name, 'w') as csv_zip:
