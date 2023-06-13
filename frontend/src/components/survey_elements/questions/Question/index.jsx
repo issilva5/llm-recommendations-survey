@@ -26,8 +26,6 @@ function Question({ questionNumber, questionModel, onAnswer, answer, previousInv
         onAnswer(questionNumber, answer, invalidMessage)
     }
 
-    console.log(invalidMessage)
-
     return (
         <div className={styles.question}>
             <p className={styles.questionEnunciation}>

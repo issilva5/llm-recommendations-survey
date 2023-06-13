@@ -26,6 +26,7 @@ class ExperimentDatabase():
                                 prolificPID TEXT PRIMARY KEY,
                                 studyID TEXT,
                                 sessionID TEXT,
+                                status TEXT default \'started\',
                                 created_at timestamp with time zone not null default CURRENT_TIMESTAMP
                             )''')
             self.conn.commit()
@@ -34,7 +35,22 @@ class ExperimentDatabase():
         except (Exception, psycopg2.Error) as error:
             self.conn.rollback()
             cursor.close()
-            print("Error while creating the preferences table:", error)
+            print("Error while creating the participant table:", error)
+    
+    def update_participant_status(self, prolific_id, status):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute(f'''UPDATE "participants"
+                              SET status = \'{status}\'
+                              WHERE prolificPID = \'{prolific_id}\'
+                           ''')
+            self.conn.commit()
+            cursor.close()
+            print("participant updated successfully.")
+        except (Exception, psycopg2.Error) as error:
+            self.conn.rollback()
+            cursor.close()
+            print("Error while updating the participant table:", error)
 
     def insert_participant(self, prolific_id, study_id, session_id):
         try:
@@ -53,13 +69,22 @@ class ExperimentDatabase():
             cursor.close()
             print("Error while inserting preference data:", error)
     
-    def exists_participant(self, prolific_id):
+    def exists_participant(self, prolific_id, status = 'finished'):
         try:
             cursor = self.conn.cursor()
             cursor.execute(f"SELECT * FROM participants WHERE prolificPID = \'{prolific_id}\'")
             rows = cursor.fetchall()
+
+            exists = True
+            if len(rows) == 0:
+                exists = False
+            elif rows[0][3] != status:
+                cursor.execute(f"DELETE FROM participants WHERE prolificPID = \'{prolific_id}\'")
+                self.conn.commit()
+                exists = False
+
             cursor.close()
-            return len(rows) != 0
+            return exists
         except (Exception, psycopg2.Error) as error:
             self.conn.rollback()
             cursor.close()
@@ -91,6 +116,7 @@ class ExperimentDatabase():
                                 CONSTRAINT fk_participant
                                     FOREIGN KEY(prolificPID) 
                                     REFERENCES participants(prolificPID)
+                                    ON DELETE CASCADE
                             )''')
             self.conn.commit()
             cursor.close()
@@ -142,6 +168,7 @@ class ExperimentDatabase():
                                 CONSTRAINT fk_participant
                                     FOREIGN KEY(prolificPID) 
                                     REFERENCES participants(prolificPID)
+                                    ON DELETE CASCADE
                             )''')
             self.conn.commit()
             cursor.close()
@@ -190,6 +217,7 @@ class ExperimentDatabase():
                     CONSTRAINT fk_participant
                         FOREIGN KEY(prolificPID) 
                         REFERENCES participants(prolificPID)
+                        ON DELETE CASCADE
                 )''')
             self.conn.commit()
             cursor.close()

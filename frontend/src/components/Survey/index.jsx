@@ -22,6 +22,26 @@ function Survey(props) {
         localStorage.setItem('PROLIFIC_PID', searchParams.get('PROLIFIC_PID') || ("NON-PROLIFIC-" + uuidv4()));
         localStorage.setItem('STUDY_ID', searchParams.get('STUDY_ID') || ("NON-PROLIFIC-" + uuidv4()));
         localStorage.setItem('SESSION_ID', searchParams.get('SESSION_ID') || ("NON-PROLIFIC-" + uuidv4()));
+
+        setLoadingMessage('Wait while we prepare the experiment... Do not refresh the page!')
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/register`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Session-Id': localStorage.getItem('SESSION_ID'),
+                'Prolific-Pid': localStorage.getItem('PROLIFIC_PID'),
+                'Study-Id': localStorage.getItem('STUDY_ID')
+            }
+        })
+            .then(response => response.json())
+            .then(response => {
+
+                if (response['error'])
+                    window.location.replace('https://app.prolific.co/submissions/complete?cc=CJGKLQRO')
+                setLoadingMessage(undefined)
+            })
+
     }, [])
 
     const onAnswer = (pageNumber, answer, invalidMessages) => {

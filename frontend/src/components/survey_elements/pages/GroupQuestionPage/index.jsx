@@ -22,12 +22,6 @@ function GroupQuestionPage(props) {
     const [invalidGroups, setInvalidGroups] = useState({});
 
     const toggleVisibileGroup = (groupId) => {
-        console.log(groupId)
-        console.log(visibleGroups)
-        console.log({
-            ...visibleGroups,
-            [groupId]: !visibleGroups[groupId]
-        })
         setVisibleGroups({
             ...visibleGroups,
             [groupId]: !visibleGroups[groupId]
