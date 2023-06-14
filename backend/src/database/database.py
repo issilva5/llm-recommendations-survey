@@ -255,7 +255,7 @@ class ExperimentDatabase():
     
     def retrive_data(self):
 
-        participants = pd.DataFrame(self.get_participants(), columns=['prolificPID', 'studyID', 'sessionID', 'created_at'])
+        participants = pd.DataFrame(self.get_participants(), columns=['prolificPID', 'studyID', 'sessionID', 'status', 'created_at'])
         preferences = pd.DataFrame(self.get_preferences(), columns=['prolificPID', 'movieTitle', 'liked', 'created_at'])
         recommendations = pd.DataFrame(self.get_recommendations(), columns=['prolificPID', 'recID', 'movieTitle', 'shouldWatch', 'userBasedExp', 'explanation', 'recommender', 'created_at'])
         evaluations = pd.DataFrame(self.get_evaluations(), columns=['prolificPID', 'recID', 'questionNumber', 'response', 'created_at'])
