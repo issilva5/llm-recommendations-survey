@@ -116,3 +116,27 @@
 .searchRemove:hover {
     color: #f00;
 }
+
+@media (max-width: 800px) {
+
+    .searchBar input {
+        width: 350px;
+    }
+
+    .searchResults {
+        width: 370px;
+    }
+
+}
+
+@media (max-width: 550px) {
+
+    .searchBar input {
+        width: 200px;
+    }
+
+    .searchResults {
+        width: 220px;
+    }
+
+}

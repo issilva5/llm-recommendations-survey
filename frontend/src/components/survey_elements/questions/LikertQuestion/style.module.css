@@ -30,3 +30,77 @@
     background-color: #007bff;
     color: #fff;
 }
+
+.likertScaleRadio {
+    display: none;
+}
+
+@media (min-width: 601px) {
+
+    .likertScaleOptions label {
+        display: none;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .likertScaleButton {
+        display: none;
+    }
+
+    .likertScaleContainer {
+        margin: 0 10px;
+        align-items: normal;
+    }
+
+    .likertScaleOptions {
+        flex-direction: column;
+    }
+
+    .likertScaleOptions label {
+        font-size: 20px;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .likertScaleOptions label:hover {
+        color: #007bff;
+    }
+
+    .likertScaleOptions input[type="radio"] {
+        font-size: 24px;
+        /* Hide the default radio button circle */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        /* Set the size of the radio button */
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2px solid #aaa;
+        /* Center the radio button within the label */
+        display: inline-block;
+        vertical-align: middle;
+        position: relative;
+        top: -2px;
+        margin-right: 5px;
+        cursor: pointer;
+        transition: all 0.15s ease-in-out;
+    }
+
+    .likertScaleOptions input[type="radio"]:checked::before {
+        /* Create a smaller circle inside the radio button when it's checked */
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #007bff;
+    }
+
+}

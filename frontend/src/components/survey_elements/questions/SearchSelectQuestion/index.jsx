@@ -30,7 +30,7 @@ const SearchSelectQuestion = (props) => {
 
         setResults([]);
         setMessage("Searching...")
-        fetch(`http://omdbapi.com/?s=${newQuery.trim()}&apikey=${process.env.REACT_APP_OMDB_API_KEY}&t=movie`, {
+        fetch(`https://omdbapi.com/?s=${newQuery.trim()}&apikey=${process.env.REACT_APP_OMDB_API_KEY}&type=movie`, {
             signal: signal,
         })
             .then(response => response.json())
@@ -38,7 +38,7 @@ const SearchSelectQuestion = (props) => {
 
                 if (data.Response === "True") {
 
-                    let queryResult = data.Search.filter((e) => { return e.Poster !== "N/A" });
+                    let queryResult = data.Search.filter((e) => { return e.Poster !== "N/A" && parseInt(e.Year) < 2021 });
                     if (queryResult.length === 0) {
                         setResults([])
                         setMessage("Movie not found!")
@@ -83,7 +83,7 @@ const SearchSelectQuestion = (props) => {
 
     const handleRemove = (item) => {
 
-        const newSelection = new Set([...selected].filter(x => x !== item));
+        const newSelection = new JSONSet([...selected].filter(x => x !== item));
 
         setSelected(newSelection);
 
@@ -99,7 +99,7 @@ const SearchSelectQuestion = (props) => {
     return (
         <div className={styles.search}>
             <div
-                onClick={() => setIsDropdownOpen(true)}
+                onMouseEnter={() => setIsDropdownOpen(true)}
                 onMouseLeave={() => setIsDropdownOpen(false)}
             >
                 {isDropdownOpen && results.length > 0 && (

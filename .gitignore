@@ -25,3 +25,5 @@ yarn-error.log*
 *llmrec*
 *.env*
 *pycache*
+
+backend/data/bd_data*
