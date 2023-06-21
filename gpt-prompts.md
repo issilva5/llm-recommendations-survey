@@ -1,0 +1,14 @@
+The following table summarizes the prompts that were used in this study.
+
+| **Prompt description**     | **Prompt**                                                                                                                                                                                                                                                                                                                                    |
+|-------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| User-preferences base prompt        | Given the answers for the following questions about the movie preferences of a person. <br> Question 1: Name three of your favorite movies (separated by semicolon). <br> Answer 1: \{liked movies\} <br> Question 2: Name three movies that you really disliked or hated (separated by semicolon). <br> Answer 2: \{disliked movies\} |
+| Personalized recommendations prompt | *User-preferences base prompt* + Could you recommend they four movies? Two of these movies should be a recommendation of a movie they must watch and two of movies they should avoid watching                                                                                                                                                   |
+| Personalized explanation prompt     | *User-preferences base prompt* + Why should someone with these preferences [not] watch the movie: {movie}?                                                                                                                                                                                                                                      |
+| General explanation prompt          | Why should someone [not] watch the movie: {movie}?                                                                                                                                                                                                                                                                                                     |
+
+
+- The *User-preferences base prompt* was used to pass the user preferences for the model when we required a personalized recommendation or explanation. 
+- The *Personalized recommendations prompt* was used to obtain the personalized recommendations and dis-recommendations. 
+- The *Personalized explanation prompt* and *General explanation prompt* were used to obtain respectively a personalized and a general explanation. 
+- The negation [not] was included in the prompt only when the explanation was generated for a dis-recommendation. 
