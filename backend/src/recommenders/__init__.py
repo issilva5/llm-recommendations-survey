@@ -14,6 +14,9 @@ load_dotenv()
 
 openai.api_key = os.getenv("OPEN_API_KEY")
 
+REC_NOVELTY = ['popular', 'novel', 'surprising', 'challenging', 'unexpected']
+EXP_GOAL = ['entertaining', 'convincing', 'transparent', 'trustworthy', 'effective']
+
 def fill_base_prompt(preferences):
     return f"""Given the answers for the following questions about the movie preferences of a person.
     Question 1: Name three of your favorite movies (separated by semicolon).
@@ -30,8 +33,10 @@ def get_gpt_recs(preferences):
 
     basePrompt = fill_base_prompt(preferences)
 
-    prompt = basePrompt + """Could you recommend they four movies? Two of these movies should be a recommendation of a movie they must watch and two of movies they should avoid watching.
+    prompt = basePrompt + f"""Could you recommend they four movies? Two of these movies should be a recommendation of a movie they must watch and two of movies they should avoid watching.
     
+    The recommendations must be {REC_NOVELTY[preferences['3']-1]}.
+
     Additional instructions:
      1. Write the answer in the format of a JSON file with the attribute recommendations that is an array with four objects with the attributes: title, imdbID and shouldWatch.
      2. The title attribute must be the title of the recommended movie and the shouldWatch must be a boolean indicating if it the movie is a recommendation of a movie the user should or not watch. 
@@ -70,7 +75,8 @@ def get_recommendations(preferences):
                                    True, 
                                    userBasedExplanationsSW[i],
                                    basePrompt,
-                                   explanations,))
+                                   explanations,
+                                   EXP_GOAL[preferences['4']-1]))
         )
     
     for i, movie in enumerate(shouldNotWatchRecommendations):
@@ -81,7 +87,8 @@ def get_recommendations(preferences):
                                    False, 
                                    userBasedExplanationsSNW[i],
                                    basePrompt,
-                                   explanations,))
+                                   explanations,
+                                   EXP_GOAL[preferences['4']-1]))
         )
     
     for t in threads:
@@ -99,12 +106,14 @@ def get_recommendations(preferences):
     
     return recommendations
 
-def get_explanation(movie, shouldWatch, userBased, userBasedBasePrompt, explanations):
+def get_explanation(movie, shouldWatch, userBased, userBasedBasePrompt, explanations, exp_goal):
 
     print(movie)
 
     prompt = f"""Why should {"someone with these preferences" if userBased else "someone"} {"not" if not shouldWatch else ""} watch the movie: {movie}?.
     
+    The explanations must be {exp_goal}.
+
     Additional instructions:
      1. Write the answer as a plain text with at least 300 and at most 350 characters and without any additional text besides the answer.
      2. Write the explanation as if you was talking to someone, for example: 'You may like this and that'.

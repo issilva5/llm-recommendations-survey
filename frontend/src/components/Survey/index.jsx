@@ -19,9 +19,9 @@ function Survey(props) {
     let navigate = useNavigate();
 
     useEffect(() => {
-        localStorage.setItem('PROLIFIC_PID', searchParams.get('PROLIFIC_PID') || ("NON-PROLIFIC-" + uuidv4()));
-        localStorage.setItem('STUDY_ID', searchParams.get('STUDY_ID') || ("NON-PROLIFIC-" + uuidv4()));
-        localStorage.setItem('SESSION_ID', searchParams.get('SESSION_ID') || ("NON-PROLIFIC-" + uuidv4()));
+        localStorage.setItem('PROLIFIC_PID', searchParams.get('PROLIFIC_PID') || ("DEMO-" + uuidv4()));
+        localStorage.setItem('STUDY_ID', searchParams.get('STUDY_ID') || ("DEMO-" + uuidv4()));
+        localStorage.setItem('SESSION_ID', searchParams.get('SESSION_ID') || ("DEMO-" + uuidv4()));
 
         setLoadingMessage('Wait while we prepare the experiment... Do not refresh the page!')
         fetch(`${process.env.REACT_APP_BACKEND_URL}/register`, {
@@ -38,7 +38,7 @@ function Survey(props) {
             .then(response => {
 
                 if (response['error'])
-                    window.location.replace('https://app.prolific.co/submissions/complete?cc=CJGKLQRO')
+                navigate("/error", {state:{"error": response['error']}})
                 setLoadingMessage(undefined)
             })
 
@@ -111,9 +111,6 @@ function Survey(props) {
                 'Study-Id': localStorage.getItem('STUDY_ID')
             },
             body: JSON.stringify(answers)
-        })
-        .then(() => {
-            window.location.replace('https://app.prolific.co/submissions/complete?cc=CJGKLQRO')
         })
 
         setCurrentPage(currentPage => currentPage + 1)

@@ -83,7 +83,31 @@ const questionsPreferences = [
         isRequired: true,
         minSelection: 3,
         maxSelection: 3
-      }
+      },
+      {
+        type: "likert",
+        title: "The recommendations should be",
+        isRequired: true,
+        options: [
+          "Popular",
+          "Novel",
+          "Surprising",
+          "Challenging",
+          "Unexpected"
+        ]
+      },
+      {
+        type: "likert",
+        title: "The explanations should be",
+        isRequired: true,
+        options: [
+          "Entertaining",
+          "Convincing",
+          "Transparent",
+          "Trustworthy",
+          "Effective"
+        ]
+      },
     ]
   }
 ]
