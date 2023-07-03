@@ -4,8 +4,9 @@ import LikertScaleQuestion from "../LikertQuestion";
 import SearchSelectQuestion from "../SearchSelectQuestion";
 import TextQuestion from "../TextQuestion";
 import styles from "./style.module.css";
+import DemoMoviesQuestion from "../DemoMoviePrefQuestion";
 
-function Question({ questionNumber, questionModel, onAnswer, answer, previousInvalidMessage, negative }) {
+function Question({ questionNumber, questionModel, onAnswer, answer, previousInvalidMessage, negative, subquestion }) {
 
     const [invalidMessage, setInvalidMessage] = useState(previousInvalidMessage || "");
 
@@ -17,7 +18,8 @@ function Question({ questionNumber, questionModel, onAnswer, answer, previousInv
         "text": TextQuestion,
         "likert": LikertScaleQuestion,
         "boolean": BooleanQuestion,
-        "search-select": SearchSelectQuestion
+        "search-select": SearchSelectQuestion,
+        "demo-movies": DemoMoviesQuestion
     };
     
     const QuestionType = questionTypes[questionModel.type];
@@ -28,7 +30,7 @@ function Question({ questionNumber, questionModel, onAnswer, answer, previousInv
 
     return (
         <div className={styles.question}>
-            <p className={styles.questionEnunciation}>
+            <p className={subquestion ? styles.questionEnunciationL2 : styles.questionEnunciationL1 }>
                 {questionNumber}. {negative && questionModel.negativeTitle ? questionModel.negativeTitle : questionModel.title}
                 <span className={styles.required}>
                     {questionModel.isRequired ? '*' : ''}

@@ -11,9 +11,15 @@
     margin-bottom: 20px;
 }
 
-.questionEnunciation {
+.questionEnunciationL1 {
     font-weight: bold;
     font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.questionEnunciationL2 {
+    font-weight: bold;
+    font-size: 16px;
     margin-bottom: 10px;
 }
 

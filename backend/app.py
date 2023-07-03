@@ -39,11 +39,11 @@ def recommendations():
 
     if not bd.exists_participant(prolific_pid, 'started'):
         return {"error": f"Participant with PROFILIC_PID {prolific_pid} is not registered."}
-    
-    for movie in request_data['1']:
+
+    for movie in request_data['1']['a']:
         bd.insert_preference(prolific_pid, movie['Title'], True)
 
-    for movie in request_data['2']:
+    for movie in request_data['1']['b']:
         bd.insert_preference(prolific_pid, movie['Title'], False)
 
     recommendations = get_recommendations(request_data)

@@ -18,14 +18,18 @@ REC_NOVELTY = ['popular', 'novel', 'surprising', 'challenging', 'unexpected']
 EXP_GOAL = ['entertaining', 'convincing', 'transparent', 'trustworthy', 'effective']
 
 def fill_base_prompt(preferences):
-    return f"""Given the answers for the following questions about the movie preferences of a person.
-    Question 1: Name three of your favorite movies (separated by semicolon).
-    Answer 1: {"; ".join([movie['Title'] for movie in preferences['1']])}
 
-    Question 2: Name three movies that you really disliked or hated (separated by semicolon).
-    Answer 2: {"; ".join([movie['Title'] for movie in preferences['2']])}
+    prompt = "Given a person with the following movie preferences."
 
-    """
+    if (len(preferences['1']['a']) > 0):
+        prompt += f"""\nLiked movies: {"; ".join([movie['Title'] for movie in preferences['1']['a']])}"""
+
+    if (len(preferences['1']['b']) > 0):
+        prompt += f"""\nDisliked movies: {"; ".join([movie['Title'] for movie in preferences['1']['b']])}"""
+
+    prompt += "\n\n"
+
+    return prompt
 
 def get_gpt_recs(preferences):
 
@@ -35,7 +39,7 @@ def get_gpt_recs(preferences):
 
     prompt = basePrompt + f"""Could you recommend they four movies? Two of these movies should be a recommendation of a movie they must watch and two of movies they should avoid watching.
     
-    The recommendations must be {REC_NOVELTY[preferences['3']-1]}.
+    {f"The recommendations must be {REC_NOVELTY[preferences['2']-1]}." if '2' in preferences else ""}
 
     Additional instructions:
      1. Write the answer in the format of a JSON file with the attribute recommendations that is an array with four objects with the attributes: title, imdbID and shouldWatch.
@@ -69,6 +73,7 @@ def get_recommendations(preferences):
 
     for i, movie in enumerate(shouldWatchRecommendations):
         movie['userBasedExplanation'] = userBasedExplanationsSW[i]
+        exp_goal = EXP_GOAL[preferences['3']-1] if '3' in preferences else None
         threads.append(
             threading.Thread(target=get_explanation,
                              args=(movie['title'], 
@@ -76,11 +81,12 @@ def get_recommendations(preferences):
                                    userBasedExplanationsSW[i],
                                    basePrompt,
                                    explanations,
-                                   EXP_GOAL[preferences['4']-1]))
+                                   exp_goal))
         )
     
     for i, movie in enumerate(shouldNotWatchRecommendations):
         movie['userBasedExplanation'] = userBasedExplanationsSNW[i]
+        exp_goal = EXP_GOAL[preferences['3']-1] if '3' in preferences else None
         threads.append(
             threading.Thread(target=get_explanation,
                              args=(movie['title'], 
@@ -88,7 +94,7 @@ def get_recommendations(preferences):
                                    userBasedExplanationsSNW[i],
                                    basePrompt,
                                    explanations,
-                                   EXP_GOAL[preferences['4']-1]))
+                                   exp_goal))
         )
     
     for t in threads:
@@ -110,9 +116,9 @@ def get_explanation(movie, shouldWatch, userBased, userBasedBasePrompt, explanat
 
     print(movie)
 
-    prompt = f"""Why should {"someone with these preferences" if userBased else "someone"} {"not" if not shouldWatch else ""} watch the movie: {movie}?.
+    prompt = f"""Why should {"someone with these preferences" if userBased else "someone"} {"not" if not shouldWatch else ""} watch the movie: {movie}?
     
-    The explanations must be {exp_goal}.
+    {f"The explanations must be {exp_goal}." if exp_goal is not None else ""}
 
     Additional instructions:
      1. Write the answer as a plain text with at least 300 and at most 350 characters and without any additional text besides the answer.

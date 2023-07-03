@@ -71,23 +71,14 @@ const questionsPreferences = [
   {
     questions: [
       {
-        type: "search-select",
-        title: "Name three of your favorite movies.",
+        type: "demo-movies",
+        title: "Tell us about your movies preferences",
         isRequired: true,
-        minSelection: 3,
-        maxSelection: 3
-      },
-      {
-        type: "search-select",
-        title: "Name three movies that you really disliked (or hated).",
-        isRequired: true,
-        minSelection: 3,
-        maxSelection: 3
+        minSelection: 3
       },
       {
         type: "likert",
         title: "The recommendations should be",
-        isRequired: true,
         options: [
           "Popular",
           "Novel",
@@ -99,7 +90,6 @@ const questionsPreferences = [
       {
         type: "likert",
         title: "The explanations should be",
-        isRequired: true,
         options: [
           "Entertaining",
           "Convincing",
@@ -120,7 +110,6 @@ const pages = [
     description: "In this section, we are interested in understanding a little more about your movies preferences.",
     onNextPage: ["POST", "/recommendations", "user_preferences", "Wait while we process your recommendations... It may take up to one minute. Do not refresh the page."],
     questions: questionsPreferences,
-    answersShouldDiff: {1: [2], 2: [1]}
   },
   {
     type: "text",
