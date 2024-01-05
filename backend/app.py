@@ -10,7 +10,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-bd = ExperimentDatabase('gptrecexp', 'adminuser', 'adminpass', 'localhost', 5432)
+bd = ExperimentDatabase('gptrecexp', os.getenv('BD_USER'), os.getenv('BD_PASS'), 'localhost', 5432)
 
 @app.route('/register', methods=['POST'])
 def register():
