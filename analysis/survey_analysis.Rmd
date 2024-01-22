@@ -1,0 +1,504 @@
+---
+title: "Survey analysis"
+output:
+  html_document:
+    code_folding: hide
+    fig_width: 8
+    fig_height: 4
+    toc: true
+    toc_depth: 3
+    toc_float: true
+theme: sandstone
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+library(tidyverse)
+library(lmerTest)
+library(effects)
+library(patchwork)
+library(psycho)
+library(report)
+# setwd("C:/Users/mwillems/OneDrive/papers/explRecSys/data")
+
+
+# If using brewer: scale_fill_manual(values = plot_palette)
+# If manual: scale_fill_manual(values = plot_palette)
+plot_palette <- c("#2596be", "#93cbac") #"Paired"
+plot_base_size <- 16
+plot_bar_width <- 0.6
+plot_errorbar_dodge <- 0.6
+plot_errorbar_width <- 0.3
+show.report <- \(x) print(report(x, CI = 95))
+```
+
+```{r reading, include=FALSE}
+participants <- read_csv("participants.csv")
+evaluations <- read_csv("evaluations.csv")
+recommendations <- read_csv("recommendations.csv")
+preferences <- read_csv("preferences.csv")
+```
+
+```{r filtering, include=FALSE}
+participants <- participants %>% filter(!startsWith(prolificPID, "NON-PROLIFIC"))
+evaluations <- evaluations %>% filter(!startsWith(prolificPID, "NON-PROLIFIC"))
+recommendations <- recommendations %>% filter(!startsWith(prolificPID, "NON-PROLIFIC"))
+preferences <- preferences %>% filter(!startsWith(prolificPID, "NON-PROLIFIC"))
+```
+
+```{r, include=FALSE}
+completeids <- participants %>% filter(status == "finished") %>% pull(prolificPID)
+```
+
+```{r, include=FALSE}
+participants <- participants %>% filter(prolificPID %in% completeids)
+evaluations <- evaluations %>% filter(prolificPID %in% completeids)
+recommendations <- recommendations %>% filter(prolificPID %in% completeids)
+preferences <- preferences %>% filter(prolificPID %in% completeids)
+```
+
+```{r}
+evaluations_detailed <- evaluations %>%
+  left_join(
+    recommendations %>%
+      select(prolificPID, recID, shouldWatch, userBasedExp, recommender),
+    by = c("prolificPID", "recID")
+  ) %>%
+  pivot_wider(
+    id_cols = c(prolificPID, recID, shouldWatch, userBasedExp, recommender),
+    names_from = questionNumber,
+    values_from = response,
+    names_prefix = "Q"
+  ) %>%
+  rename(know = Q1) %>%
+  mutate(know = ifelse(know=="true", "Known", "Unknown"),
+         recType = recommender,
+         expType = ifelse(userBasedExp, "User-based", "Generic"),
+         across(starts_with("Q"), as.numeric))
+```
+
+```{r}
+dfnl <- evaluations_detailed %>% filter(!shouldWatch)
+df <- evaluations_detailed %>% filter(shouldWatch)
+```
+
+# RQ1 - How do users evaluate ChatGPT-generated recommendations compared to random (but popular) recommendations?
+
+## For recommendations
+
+```{r}
+M2<-lmer(Q2~recType*know+(1|prolificPID),data=df)
+summary(M2)
+```
+
+```{r, results='asis'}
+show.report(M2)
+```
+
+```{r}
+ef <- effect("recType:know", M2)
+m2i<-as.data.frame(ef)
+p1 <- ggplot(m2i, aes(x = recType, y = fit, fill = know)) +
+  geom_bar(stat = "identity", position = "dodge", width = plot_bar_width) +
+  geom_errorbar(aes(ymin = fit - se, ymax = fit + se),
+                width = plot_errorbar_width,
+                position = position_dodge(width = 0.6)) +
+  theme_bw(base_size = plot_base_size) +
+  labs(y = "Satisfaction",
+       title = "(a) Question: I would enjoy this recommendation.",
+       fill = "Previous knowledge about the movie",
+       x = "Recommender") +coord_cartesian(ylim=c(1,5))+
+  theme(legend.position = "top") +
+  scale_fill_manual(values = plot_palette)
+
+p1
+```
+
+## For disrecommendations (do not report this in the paper yet)
+
+```{r}
+M2d<-lmer(Q2~know+(1|prolificPID),data=dfnl)
+summary(M2d)
+```
+
+```{r, results='asis'}
+show.report(M2d)
+```
+
+# RQ2 - How do users perceive personalized versus generic ChatGPT-generated explanations regarding the recommendation method, effectiveness, and persuasiveness of explanations for recommendations?
+
+## For recommendations
+
+### Helpfulness
+
+```{r}
+M3<-lmer(Q3~recType*expType+(1|prolificPID),data=df)
+summary(M3)
+```
+
+```{r, results='asis'}
+show.report(M3)
+```
+
+```{r}
+ef <- effect("recType:expType", M3)
+m3i<-as.data.frame(ef)
+p2 <- ggplot(m3i, aes(recType, fit, fill = expType)) +
+  geom_bar(stat = "identity", position = "dodge", width = plot_bar_width) + 
+  geom_errorbar(aes(ymin = fit - se, ymax = fit + se),
+                width = plot_errorbar_width,
+                position = position_dodge(width = plot_errorbar_dodge)) +
+  theme_bw(base_size = plot_base_size) + 
+  labs(y = "Effectiveness",
+       title = "(b) Question: This explanation helps me to \ndetermine how well I will like this movie.",
+       x = "Recommender",
+       fill = "Explanation Type") +
+  theme(legend.position = "top") +coord_cartesian(ylim=c(1,5))+
+  scale_fill_manual(values = plot_palette)
+
+p2
+```
+
+### Personalization
+
+```{r}
+M4<-lmer(Q4~recType*expType+(1|prolificPID),data=df)
+summary(M4)
+```
+
+```{r, results='asis'}
+show.report(M4)
+```
+
+
+```{r}
+ef <- effect("recType:expType", M4)
+m4i<-as.data.frame(ef)
+p3 <- ggplot(m4i, aes(recType, fit, fill = expType)) +
+  geom_bar(stat = "identity", position = "dodge", width = plot_bar_width) +
+  geom_errorbar(aes(ymin = fit - se, ymax = fit + se),
+                width = plot_errorbar_width,
+                position = position_dodge(width = plot_errorbar_dodge)) +
+  theme_bw(base_size = plot_base_size) +
+  labs(y = "Personalization",
+       title = "(c) Question: This explanation resonates well with\naspects of movies that I like.",
+       x = "Recommender",
+       fill = "Explanation Type") +
+  theme(legend.position = "top") +coord_cartesian(ylim=c(1,5))+
+  scale_fill_manual(values = plot_palette)
+
+p3
+```
+
+### Persuasiveness
+
+```{r}
+M5<-lmer(Q5~recType*expType+(1|prolificPID),data=df)
+summary(M5)
+```
+
+```{r, results='asis'}
+show.report(M5)
+```
+
+```{r}
+ef <- effect("recType:expType", M5)
+m5ai<-as.data.frame(ef)
+p4 <- ggplot(m5ai, aes(recType, fit, fill = expType)) +
+  geom_bar(stat = "identity", position = "dodge", width = plot_bar_width) +
+  geom_errorbar(aes(ymin = fit - se, ymax = fit + se),
+                width = plot_errorbar_width,
+                position = position_dodge(width = plot_errorbar_dodge)) +
+  theme_bw(base_size = plot_base_size) +
+  labs(title = "(d) Question: This explanation is convincing.",
+       y = "Persuasiveness",
+       x = "Recommender",
+       fill = "Explanation Type") +
+  theme(legend.position = "top") +coord_cartesian(ylim=c(1,5))+
+  scale_fill_manual(values = plot_palette)
+
+p4
+```
+
+```{r, fig.height=9, fig.width=16}
+(p1 + theme(plot.margin = unit(c(0,30,30,0), "pt")) + p2) / (p3 + p4)
+```
+
+```{r}
+ggsave("plot-recs.pdf", device = "pdf", width = 16, height = 9)
+```
+
+## For disrecommendations
+
+### Helpfulness
+
+```{r}
+M3d<-lmer(Q3~expType+(1|prolificPID),data=dfnl)
+summary(M3d)
+```
+
+```{r, results='asis'}
+show.report(M3d)
+```
+
+### Personalization
+
+```{r}
+M4d<-lmer(Q4~expType+(1|prolificPID),data=dfnl)
+summary(M4d)
+```
+
+```{r, results='asis'}
+show.report(M4d)
+```
+
+### Persuasiveness
+
+```{r}
+M5d<-lmer(Q5~expType*know+(1|prolificPID),data=dfnl)
+summary(M5d)
+```
+
+```{r, results='asis'}
+show.report(M5d)
+```
+
+# RQ4 - Do personalized versus generic explanations work differently for familiar or unfamiliar movies?
+
+## For recommendations
+
+### Helpfulness
+
+```{r}
+M3<-lmer(Q3~recType+expType+ expType*know + (1|prolificPID),data=df)
+summary(M3)
+```
+
+```{r, results='asis'}
+show.report(M3)
+```
+
+```{r}
+ef <- effect("recType:expType:know", M3)
+m3i<-as.data.frame(ef)
+p2 <- ggplot(m3i, aes(recType, fit, fill = expType)) +
+  geom_bar(stat = "identity", position = "dodge", width = plot_bar_width) +
+  geom_errorbar(aes(ymin = fit - se, ymax = fit + se),
+                width = plot_errorbar_width,
+                position = position_dodge(width = plot_errorbar_dodge)) +
+  theme_bw(base_size = plot_base_size) +
+  facet_wrap(~ know) +
+  labs(y = "Effectiveness",
+       title = "(a) Question: This explanation helps me\nto determine how well I will like this\nmovie.",
+       x = "Recommender",
+       fill = "Explanation Type") +
+  theme(legend.position = "top") +coord_cartesian(ylim=c(1,5))+
+  scale_fill_manual(values = plot_palette)
+
+p2
+```
+
+### Personalization
+
+```{r}
+M4<-lmer(Q4~recType*expType+ expType*know+(1|prolificPID),data=df)
+summary(M4)
+```
+
+```{r, results='asis'}
+show.report(M4)
+```
+
+
+```{r}
+ef <- effect("recType:expType:know", M4)
+m4i<-as.data.frame(ef)
+
+m4i
+
+p3 <- ggplot(m4i, aes(recType, fit, fill = expType)) +
+  geom_bar(stat = "identity", position = "dodge", width = plot_bar_width) +
+  geom_errorbar(aes(ymin = fit - se, ymax = fit + se),
+                width = plot_errorbar_width,
+                position = position_dodge(width = plot_errorbar_dodge)) +
+  theme_bw(base_size = plot_base_size) +
+  facet_wrap(~ know) +
+  labs(y = "Personalization",
+       title = "(b) Question: This explanation resonates well\nwith aspects of movies that I like.",
+       x = "Recommender",
+       fill = "Explanation Type") +
+  theme(legend.position = "top") +coord_cartesian(ylim=c(1,5))+
+  scale_fill_manual(values = plot_palette)
+
+p3
+```
+
+### Persuasiveness
+
+```{r}
+
+#M5<-lmer(Q5~recType*expType*know+(1|prolificPID),data=df)
+M5<-lmer(Q5~recType*expType + expType*know+(1|prolificPID),data=df)
+summary(M5)
+```
+
+```{r, results='asis'}
+show.report(M5)
+```
+
+```{r}
+ef <- effect("recType:expType:know", M5)
+m5ai<-as.data.frame(ef)
+p4 <- ggplot(m5ai, aes(recType, fit, fill = expType)) +
+  geom_bar(stat = "identity", position = "dodge", width = plot_bar_width) +
+  geom_errorbar(aes(ymin = fit - se, ymax = fit + se),
+                width = plot_errorbar_width,
+                position = position_dodge(width = plot_errorbar_dodge)) +
+  theme_bw(base_size = plot_base_size) + coord_cartesian(ylim=c(1,5))+
+  facet_wrap(~ know) +
+  labs(title = "(c) Question: This explanation is\nconvincing.",
+       y = "Persuasiveness",
+       x = "Recommender",
+       fill = "Explanation Type") +
+  theme(legend.position = "top") +
+  scale_fill_manual(values = plot_palette)
+
+p4
+```
+
+```{r, fig.height=5, fig.width=16}
+(p2 + theme(plot.margin = unit(c(0,10,0,0), "pt"))) + (p3 + theme(plot.margin = unit(c(0,10,0,0), "pt"))) + p4 +
+  plot_layout(guides = 'collect') &
+  theme(legend.position = "top")
+```
+
+```{r}
+ggsave("plot-familiarity.pdf", device = "pdf", width = 16, height = 5)
+```
+
+## For disrecommendations
+
+### Helpfulness
+
+```{r}
+M3d<-lmer(Q3~expType*know+(1|prolificPID),data=dfnl)
+summary(M3d)
+```
+
+```{r, results='asis'}
+show.report(M3d)
+```
+
+```{r}
+ef <- effect("expType:know", M3d)
+m3i<-as.data.frame(ef)
+
+p5 <- ggplot(m3i, aes(know, fit, fill = expType)) +
+  geom_bar(stat = "identity", position = "dodge", width = plot_bar_width) +
+  geom_errorbar(aes(ymin = fit - se, ymax = fit + se),
+                width = plot_errorbar_width,
+                position = position_dodge(width = plot_errorbar_dodge)) +
+  theme_bw(base_size = plot_base_size) +
+  labs(y = "Effectiveness",
+       title = "(a) Question: This explanation helps me\nto determine how well I will dislike this\nmovie.",
+       x = "Previous knowledge about the movie",
+       fill = "Explanation Type") +
+  theme(legend.position = "top") +coord_cartesian(ylim=c(1,5))+
+  scale_fill_manual(values = plot_palette)
+
+p5
+```
+user-based significantly lower if we clean up the model
+```{r}
+M3d2<-lmer(Q3~expType+(1|prolificPID),data=dfnl)
+summary(M3d2)
+```
+
+
+### Personalization
+
+```{r}
+M4d<-lmer(Q4~expType*know+(1|prolificPID),data=dfnl)
+summary(M4d)
+```
+
+```{r, results='asis'}
+show.report(M4d)
+```
+
+```{r}
+ef <- effect("expType:know", M3d)
+m4i<-as.data.frame(ef)
+
+p6 <- ggplot(m4i, aes(know, fit, fill = expType)) +
+  geom_bar(stat = "identity", position = "dodge", width = plot_bar_width) +
+  geom_errorbar(aes(ymin = fit - se, ymax = fit + se),
+                width = plot_errorbar_width,
+                position = position_dodge(width = plot_errorbar_dodge)) +
+  theme_bw(base_size = plot_base_size) +
+  labs(y = "Personalization",
+       title = "(b) Question: This explanation resonates well\nwith aspects of movies that I dislike.",
+       x = "Previous knowledge about the movie",
+       fill = "Explanation Type") +
+  theme(legend.position = "top") +coord_cartesian(ylim=c(1,5))+
+  scale_fill_manual(values = plot_palette)
+
+p6
+```
+#without interaction of known expType still not significant
+```{r}
+M4d2<-lmer(Q4~expType+(1|prolificPID),data=dfnl)
+summary(M4d2)
+```
+### Persuasiveness
+
+```{r}
+M5d<-lmer(Q5~expType*know+(1|prolificPID),data=dfnl)
+summary(M5d)
+```
+
+```{r, results='asis'}
+show.report(M5d)
+```
+
+```{r}
+ef <- effect("expType:know", M5d)
+m5i <- as.data.frame(ef)
+p7 <- ggplot(m5i, aes(x = know, y = fit, fill = expType)) +
+  geom_bar(stat = "identity", position = "dodge", width = plot_bar_width) +
+  geom_errorbar(aes(ymin = fit - se, ymax = fit + se),
+                width = plot_errorbar_width,
+                position = position_dodge(width = plot_errorbar_dodge)) +
+  theme_bw(base_size = plot_base_size) +
+  labs(title = "(c) Question: This explanation is\nconvincing.",
+       y = "Persuasiveness",
+       x = "Previous knowledge about the movie",
+       fill = "Explanation Type") +coord_cartesian(ylim=c(1,5))+
+  theme(legend.position = "top") +
+  scale_fill_manual(values = plot_palette)
+
+p7
+```
+```{r}
+M5d2<-lmer(Q5~expType+(1|prolificPID),data=dfnl)
+summary(M5d2)
+```
+
+```{r, fig.height=5, fig.width=16}
+(p5 + theme(plot.margin = unit(c(0,10,0,0), "pt"))) + (p6 + theme(plot.margin = unit(c(0,10,0,0), "pt"))) + p7 +
+  plot_layout(guides = 'collect') &
+  theme(legend.position = "top")
+```
+```{r}
+ggsave("plot-disrecs.pdf", device = "pdf", width = 16, height = 5)
+```
+
+
+```{r}
+#convert to csv for mplus
+dtm<-df %>% mutate(id=as.numeric(as.factor(prolificPID)), userBased=ifelse(userBasedExp, 1, 0), GPTrec=ifelse(	
+recommender=="random-imdb",0,1), enjoy=Q2, eff=Q3,personalized=Q4, persuasive=Q5, known=ifelse(know=="Known", 1,0))
+write.table(dtm[,13:20],"explrec.txt", sep=" ", row.names=F)
+
+```
+
