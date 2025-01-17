@@ -1,6 +1,4 @@
-# Leveraging ChatGPT for Automated Human-centered Explanations in Recommender Systems
-
-This repository holds the code for the paper entitled `Leveraging ChatGPT for Automated Human-centered Explanations in Recommender Systems` to be presented at the 29th Annual ACM Conference on Intelligent User Interfaces (IUI 2024). This paper was written by: ITALLO SILVA (Federal University of Campina Grande, Brazil), LEANDRO BALBY MARINHO (Federal University of Campina Grande, Brazil), ALAN SAID (University of Gothenburg, Sweden) and MARTIJN WILLEMSEN (TU Eindhoven & JADS, The Netherlands).
+# User Perceptions of Personalized and Generic Explanations in LLM-Driven Recommender Systems
 
 # Running the application
 
