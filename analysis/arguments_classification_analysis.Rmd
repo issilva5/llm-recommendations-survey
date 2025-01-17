@@ -1,0 +1,179 @@
+---
+title: "Arguments' classification analysis"
+output:
+  html_document:
+    code_folding: hide
+    fig_width: 8
+    fig_height: 4
+    toc: true
+    toc_depth: 3
+    toc_float: true
+theme: sandstone
+date: "2025-01-16"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(DiagrammeR)
+library(DiagrammeRsvg)
+library(rsvg)
+library(tidytext)
+
+
+plot_palette <- c("#2596be", "#93cbac") #"Paired"
+```
+
+```{r}
+class <- read_csv("arguments_classification.csv")
+recs <- read_csv("recommendations.csv")
+
+class <- class %>%
+  replace_na(list(classification = "NA")) %>%
+  left_join(recs %>% select(prolificPID, recID, userBasedExp),
+            by = join_by(prolificPID, recID))
+```
+
+# Arguments distribution
+
+```{r, fig.height=9, fig.width=16}
+pdf("args_class_by_typeofexp.pdf", width = 16, height = 9)
+
+class %>%
+  count(classification, userBasedExp, sort = TRUE) %>%
+  group_by(userBasedExp = factor(userBasedExp, labels = c("Generic Exp.", "User-Based Exp."))) %>%
+  mutate(prob = n / sum(n)) %>%
+  mutate(grp = reorder_within(classification, prob, within = userBasedExp)) %>%
+  ggplot(aes(x = grp, y = prob, fill = userBasedExp)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = round(prob * 100, 2)), angle = 90, nudge_y = 0.03, size = 5) +
+  facet_wrap(~ userBasedExp, scales = "free_x") +
+  theme_bw() +
+  scale_x_reordered(limits = rev) +
+  theme(axis.text.x = element_text(angle = 90), legend.position = "none", text = element_text(size = 20)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = plot_palette) +
+  labs(x = "Classification (Type of Argument)", y = "Frequency (%)")
+
+dev.off()
+```
+
+
+# Trigrams distribution
+
+```{r, fig.height=9, fig.width=16}
+# Create n-grams (e.g., trigrams)
+ngrams <- class %>%
+  select(prolificPID, recID, userBasedExp, order, classification) %>%
+  arrange(prolificPID, recID, userBasedExp, order) %>%
+  group_by(prolificPID, recID, userBasedExp) %>%
+  summarise(sequence = paste(classification, collapse = " "), .groups = "drop") %>%
+  unnest_tokens(ngram, sequence, token = "ngrams", n = 3)
+
+# Count frequent n-grams
+ngram_counts <- ngrams %>%
+  count(ngram, userBasedExp, sort = TRUE)
+
+pdf("trigramsfreq.pdf", width = 16, height = 9)
+
+# Plot
+ngram_counts %>% arrange(userBasedExp, -n) %>%
+  group_by(userBasedExp = factor(userBasedExp, labels = c("Generic Exp.", "User-Based Exp."))) %>%
+  mutate(prob = n / sum(n)) %>%
+  slice_max(order_by = prob, n = 10, with_ties = FALSE) %>%
+  mutate(grp = reorder_within(ngram, prob, within = userBasedExp)) %>%
+  ggplot(aes(y = prob, x = grp, fill = userBasedExp)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ userBasedExp, ncol = 1, scales = "free_x") +
+  theme_bw() +
+  scale_y_continuous(labels = scales::percent, breaks = seq(0, 1, .05)) +
+  scale_x_reordered(limits = rev) +
+  labs(x = "Tri-grams", y = "Frequency (%)") +
+  scale_fill_manual(values = plot_palette) +
+  theme(text = element_text(size = 20), legend.position = "none")
+
+dev.off()
+
+```
+
+
+# Markov Chains Transition analysis
+
+```{r}
+
+transitions <- bind_rows(
+
+class %>%
+  select(prolificPID, recID, order, classification, userBasedExp) %>%
+  arrange(prolificPID, recID, order) %>%
+  group_by(prolificPID, recID) %>%
+  mutate(next_classification = lead(classification)) %>%
+  ungroup() %>%
+  replace_na(list(next_classification = "EOE")) %>%
+  filter(!is.na(next_classification)),
+
+class %>%
+  select(prolificPID, recID, order, classification, userBasedExp) %>%
+  arrange(prolificPID, recID, order) %>%
+  group_by(prolificPID, recID) %>%
+  mutate(prev_classification = lag(classification)) %>%
+  ungroup() %>%
+  filter(is.na(prev_classification)) %>%
+  replace_na(list(prev_classification = "SOE")) %>%
+  rename(next_classification = classification, classification = prev_classification) %>%
+  mutate(order = -1)
+
+) %>%
+  count(classification, next_classification, userBasedExp)
+```
+
+```{r}
+transition_matrix <- transitions %>% filter(userBasedExp) %>%
+  group_by(classification) %>%
+  mutate(probability = n / sum(n)) %>%
+  ungroup()
+
+dot_graph <- transition_matrix %>% filter(probability >= .15) %>%
+  mutate(edge = paste0('"', classification, '" -> "', next_classification, '" [label="', round(probability, 2), '"]')) %>%
+  pull(edge) %>%
+  paste(collapse = "\n")
+
+dot_code <- paste(
+  "digraph MarkovChain {",
+  "  graph [rankdir=LR, ranksep=1.5, mindist=2, layout=circo];",
+  "  node [style=filled, fillcolor=lightblue, fontsize=16, width=1, height=1];",
+  "  edge [color=gray, fontcolor=black, size=2, style=bold, fontsize=14];",
+  dot_graph,
+  "}"
+)
+
+grViz(dot_code) %>% export_svg() %>%
+    charToRaw %>% 
+    rsvg_pdf("markov_chain_plot_userbased.pdf")
+```
+
+```{r}
+transition_matrix <- transitions %>% filter(!userBasedExp) %>%
+  group_by(classification) %>%
+  mutate(probability = n / sum(n)) %>%
+  ungroup()
+
+dot_graph <- transition_matrix %>% filter(probability >= .15) %>%
+  mutate(edge = paste0('"', classification, '" -> "', next_classification, '" [label="', round(probability, 2), '"]')) %>%
+  pull(edge) %>%
+  paste(collapse = "\n")
+
+dot_code <- paste(
+  "digraph MarkovChain {",
+  "  graph [rankdir=LR, ranksep=1.5, mindist=2, layout=circo];",
+  "  node [style=filled, fillcolor=lightblue, fontsize=16, width=1, height=1];",
+  "  edge [color=gray, fontcolor=black, size=2, style=bold, fontsize=14];",
+  dot_graph,
+  "}"
+)
+
+grViz(dot_code) %>% export_svg() %>%
+    charToRaw %>% 
+    rsvg_pdf("markov_chain_plot_generic.pdf")
+```
+
