@@ -60,6 +60,10 @@ The questions a page may have can have four types: *text*, *likert*, *boolean* a
 
 Examples of the usage of these elements can be found [here](frontend/src/survey_model.js).
 
+# Running the arguments classification
+
+The script to run the classification is [here](analysis/argument_classification.py). The instructions about how run it are commented in the start of the script. The analysis over the data is available [here](analysis/arguments_classification_analysis.Rmd).
+
 # Contact information
 
 If you have any doubts about the source code or the research, send me an email at itallo@copin.ufcg.edu.br.
